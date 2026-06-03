@@ -243,7 +243,7 @@ function init() {
   buildSlides();
   Reveal.initialize({
     hash: true,
-    width: 1280,
+    width: '90%',
     height: 900,
     margin: 0.06,
     center: true,

@@ -599,6 +599,8 @@ body,
   overflow: hidden;
   min-height: 0;
   transition: border-color 0.15s, background 0.15s;
+  margin: 0 10px 0 30px;
+  max-width: 40vw;
 }
 
 .drop-zone.drag-over {
