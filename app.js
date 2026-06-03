@@ -207,6 +207,7 @@ const SLIDES = [
     eyebrow: 'Workshop 1 Playlist',
     headline: 'Every song\nfrom today\'s session.',
   },
+  { id: 'activity', type: 'activity' },
 ];
 
 const ZONES = [
@@ -234,40 +235,36 @@ const CARDS = [
 
 // ─── State ───────────────────────────────────────────────────────────────────
 
-const state = { panel: null };
+const state = { placements: {} };
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 
 function init() {
   buildSlides();
-  setupControls();
-  setupPanels();
-  requestAnimationFrame(() => {
-    Reveal.initialize({
-      controls: true,
-      controlsTutorial: false,
-      controlsLayout: 'bottom-right',
-      progress: true,
-      slideNumber: false,
-      hash: true,
-      history: true,
-      keyboard: true,
-      overview: true,
-      center: false,
-      touch: true,
-      transition: 'slide',
-      transitionSpeed: 'fast',
-      backgroundTransition: 'none',
-      width: window.innerWidth,
-      height: window.innerHeight,
-      margin: 0,
-      minScale: 1,
-      maxScale: 1,
-    }).then(() => {
-      generateQR();
-    });
-    window.addEventListener('resize', () => Reveal.layout());
+  Reveal.initialize({
+    controls: true,
+    controlsTutorial: false,
+    controlsLayout: 'bottom-right',
+    progress: true,
+    slideNumber: false,
+    hash: true,
+    history: true,
+    keyboard: true,
+    overview: true,
+    center: false,
+    touch: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'none',
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+  }).then(() => {
+    generateQR();
   });
+  window.addEventListener('resize', () => Reveal.layout());
+  setupControls();
+  setupActivity();
   document.addEventListener('click', e => {
     const btn = e.target.closest('.song-link');
     if (btn) { openSongOverlay(btn.dataset.song); return; }
@@ -276,7 +273,6 @@ function init() {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (document.querySelector('.song-overlay')) { closeSongOverlay(); e.stopImmediatePropagation(); return; }
-      if (state.panel) { closePanel(); e.stopImmediatePropagation(); return; }
     }
   });
 }
@@ -287,10 +283,14 @@ function buildSlides() {
   const container = document.getElementById('slides-container');
   SLIDES.forEach((slide, i) => {
     const section = document.createElement('section');
-    const inner = document.createElement('div');
-    inner.className = 'slide-inner';
-    inner.innerHTML = renderSlide(slide, i);
-    section.appendChild(inner);
+    if (slide.type === 'activity') {
+      buildActivity(section);
+    } else {
+      const inner = document.createElement('div');
+      inner.className = 'slide-inner';
+      inner.innerHTML = renderSlide(slide, i);
+      section.appendChild(inner);
+    }
     container.appendChild(section);
   });
 }
@@ -312,43 +312,12 @@ function toggleFullscreen() {
   else document.exitFullscreen?.();
 }
 
-// ─── Panels ──────────────────────────────────────────────────────────────────
+// ─── Activity ────────────────────────────────────────────────────────────────
 
-function setupPanels() {
-  document.getElementById('btn-outline')?.addEventListener('click', () => togglePanel('outline'));
-  document.getElementById('btn-activity')?.addEventListener('click', () => togglePanel('activity'));
-  document.getElementById('panel-backdrop')?.addEventListener('click', closePanel);
-  document.querySelectorAll('.side-panel-close').forEach(b => b.addEventListener('click', closePanel));
-}
-
-function togglePanel(id) {
-  if (state.panel === id) { closePanel(); return; }
-  closePanel();
-  state.panel = id;
-  const panel = document.getElementById('panel-' + id);
-  if (!panel) return;
-  if (id === 'outline' && !panel.dataset.built) {
-    buildHandout(document.getElementById('outline-body'));
-    panel.dataset.built = '1';
-  }
-  if (id === 'activity' && !panel.dataset.built) {
-    buildActivity(document.getElementById('activity-body'));
-    panel.dataset.built = '1';
-  }
-  panel.classList.add('open');
-  panel.setAttribute('aria-hidden', 'false');
-  document.getElementById('panel-backdrop')?.classList.add('visible');
-  document.getElementById('btn-' + id)?.classList.add('active');
-}
-
-function closePanel() {
-  if (state.panel) {
-    document.getElementById('panel-' + state.panel)?.classList.remove('open');
-    document.getElementById('panel-' + state.panel)?.setAttribute('aria-hidden', 'true');
-    document.getElementById('btn-' + state.panel)?.classList.remove('active');
-  }
-  document.getElementById('panel-backdrop')?.classList.remove('visible');
-  state.panel = null;
+function setupActivity() {
+  document.getElementById('btn-activity')?.addEventListener('click', () => {
+    Reveal.slide(SLIDES.length - 1);
+  });
 }
 
 // ─── Slide renderers ─────────────────────────────────────────────────────────
@@ -632,131 +601,11 @@ function closeSongOverlay() {
   existing.addEventListener('transitionend', () => existing.remove(), { once: true });
 }
 
-// ─── Handout ──────────────────────────────────────────────────────────────────
-
-function buildHandout(panel) {
-  const wrap = el('div', 'handout');
-
-  // Helper: build a song-link button for handout use
-  function slinkH(songId, label) {
-    return `<button class="song-link" data-song="${songId}">${label}</button>`;
-  }
-
-  const sections = [
-    {
-      label: 'The Formula',
-      title: 'The Standard Map',
-      body: 'Most chart songs follow ABABCBB — Verse, Chorus, Verse, Chorus, Bridge, Chorus, Chorus. Learn this skeleton first.',
-      extra: () => {
-        const row = el('div', 'h-structure-row');
-        SLIDES[1].blocks.forEach(b => {
-          const d = el('div', `s-block ${b.type}`);
-          d.textContent = b.l;
-          d.style.cssText = 'min-width:28px;height:28px;font-size:.75rem;';
-          row.appendChild(d);
-        });
-        return row;
-      },
-    },
-    {
-      label: 'Other Structures',
-      title: 'The Alternatives',
-      // Build as raw HTML so song-links render
-      rawTable: SLIDES[3].rows.map(r =>
-        `<tr><td>${esc(r.name)}</td><td>${
-          r.songId ? slinkH(r.songId, esc(r.example)) : esc(r.example)
-        }</td></tr>`
-      ).join(''),
-    },
-    {
-      label: 'The Rule vs. The Exception',
-      title: 'Do songs need a chorus?',
-      rawBody: `No. ${slinkH('fast-car','"Fast Car"')}. ${slinkH('hurt','"Hurt"')}. ${slinkH('alright','"Alright"')}. Zero choruses. Completely unforgettable.`,
-    },
-    {
-      label: 'A Borrowed Map',
-      title: "Hero's Journey = Song Structure",
-      table: SLIDES[5].rows.map(r => [r.journey, r.song]),
-    },
-    {
-      label: 'Case Study',
-      title: '"Don\'t Dream It\'s Over" — Crowded House',
-      rawBody: `A Hero's Journey that refuses to complete. The final chorus insists rather than resolves.<br><br>Unresolved for 40 years. Nobody's tired of it.<br><br>${slinkH('dont-dream-its-over','Listen to this song ↗')}`,
-    },
-    {
-      label: 'The Point',
-      title: 'Structure isn\'t the cage. It\'s the launching pad.',
-      body: '→ Switch to the Activity tab when your instructor says go.',
-    },
-  ];
-
-  sections.forEach(s => {
-    const sec = el('div', 'handout-section');
-    sec.innerHTML = `<div class="h-label">${esc(s.label)}</div>
-                     <div class="h-title">${esc(s.title)}</div>`;
-
-    if (s.rawBody) {
-      const p = el('div', 'h-body');
-      p.innerHTML = s.rawBody;
-      sec.appendChild(p);
-    } else if (s.body) {
-      const p = el('div', 'h-body');
-      p.textContent = s.body;
-      sec.appendChild(p);
-    }
-
-    if (s.rawTable) {
-      const tbl = el('table', 'h-mini-table');
-      tbl.innerHTML = s.rawTable;
-      sec.appendChild(tbl);
-    } else if (s.table) {
-      const tbl = el('table', 'h-mini-table');
-      s.table.forEach(([a, b]) => {
-        const row = document.createElement('tr');
-        row.innerHTML = `<td>${esc(a)}</td><td>${esc(b)}</td>`;
-        tbl.appendChild(row);
-      });
-      sec.appendChild(tbl);
-    }
-
-    if (s.extra) sec.appendChild(s.extra());
-    wrap.appendChild(sec);
-  });
-
-  // ── Playlist section ──────────────────────────────────────────
-  const playlistSec = el('div', 'handout-section');
-  playlistSec.innerHTML = `<div class="h-label">Workshop 1 Playlist</div>
-                            <div class="h-title">Every song from today's session.</div>`;
-
-  PLAYLIST_GROUPS.forEach(g => {
-    const groupEl = el('div', 'h-pl-group');
-    groupEl.innerHTML = `<div class="h-pl-group-label">${esc(g.label)}</div>`;
-
-    g.songs.forEach(sid => {
-      const song = SONGS[sid];
-      if (!song) return;
-      const btn = el('button', 'song-link h-pl-row');
-      btn.dataset.song = sid;
-      btn.innerHTML = `
-        <span class="h-pl-title">${esc(song.title)}</span>
-        <span class="h-pl-artist">${esc(song.artist)} · ${song.year}</span>
-        <span class="h-pl-arrow">↗</span>
-      `;
-      groupEl.appendChild(btn);
-    });
-
-    playlistSec.appendChild(groupEl);
-  });
-
-  wrap.appendChild(playlistSec);
-  panel.appendChild(wrap);
-}
-
 // ═══════════════════════════════════════════════════════════════
 //  ACTIVITY — Build Your Skeleton
 // ═══════════════════════════════════════════════════════════════
 
-function buildActivity(container) {
+function buildActivity(section) {
   const wrap = el('div', 'activity-view');
   wrap.innerHTML = `
     <div class="activity-header">
@@ -788,7 +637,7 @@ function buildActivity(container) {
       </div>
     </div>
   `;
-  container.appendChild(wrap);
+  section.appendChild(wrap);
   wrap.querySelector('#reset-btn').addEventListener('click', resetActivity);
   setupDragAndDrop();
 }
