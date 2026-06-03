@@ -5,6 +5,7 @@
 }
 
 :root {
+  --r-background-color: #0A0908; /* Tell Reveal.js our background is dark */
   --bg:          #0A0908;
   --bg-warm:     #0F0D0B;
   --surface:     #141210;
@@ -555,7 +556,7 @@ body {
 .student-panel {
   flex: 1;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
 }
 
 .student-panel[hidden] { display: none; }
@@ -666,7 +667,7 @@ body {
 .zones-scroll {
   flex: 1;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 0.85rem var(--px);
   display: flex;
   flex-direction: column;
@@ -1379,7 +1380,7 @@ body {
 .zoom-map-scroll {
   flex: 1;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   padding: 0.85rem var(--px);
   display: flex;
   flex-direction: column;
@@ -1542,7 +1543,6 @@ html, body { overflow: hidden; }
   background: var(--bg);
 }
 .reveal {
-  background: var(--bg) !important;
   color: var(--text);
   font-family: var(--font-u);
 }
@@ -1566,7 +1566,7 @@ html, body { overflow: hidden; }
   justify-content: center;
   height: 100%;
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   box-sizing: border-box;
 }
 
@@ -1720,7 +1720,7 @@ html, body { overflow: hidden; }
 /* Handout inside panel needs to scroll */
 .side-panel-body .handout {
   overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
   flex: 1;
 }
 
