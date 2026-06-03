@@ -240,32 +240,34 @@ const state = { panel: null };
 
 function init() {
   buildSlides();
-  Reveal.initialize({
-    controls: true,
-    controlsTutorial: false,
-    controlsLayout: 'bottom-right',
-    progress: true,
-    slideNumber: false,
-    hash: true,
-    history: true,
-    keyboard: true,
-    overview: true,
-    center: false,
-    touch: true,
-    transition: 'slide',
-    transitionSpeed: 'fast',
-    backgroundTransition: 'none',
-    width: '100%',
-    height: '100%',
-    margin: 0,
-    minScale: 1,
-    maxScale: 1,
-  }).then(() => {
-    generateQR();
-  });
-  window.addEventListener('resize', () => Reveal.layout());
   setupControls();
   setupPanels();
+  requestAnimationFrame(() => {
+    Reveal.initialize({
+      controls: true,
+      controlsTutorial: false,
+      controlsLayout: 'bottom-right',
+      progress: true,
+      slideNumber: false,
+      hash: true,
+      history: true,
+      keyboard: true,
+      overview: true,
+      center: false,
+      touch: true,
+      transition: 'slide',
+      transitionSpeed: 'fast',
+      backgroundTransition: 'none',
+      width: window.innerWidth,
+      height: window.innerHeight,
+      margin: 0,
+      minScale: 1,
+      maxScale: 1,
+    }).then(() => {
+      generateQR();
+    });
+    window.addEventListener('resize', () => Reveal.layout());
+  });
   document.addEventListener('click', e => {
     const btn = e.target.closest('.song-link');
     if (btn) { openSongOverlay(btn.dataset.song); return; }
