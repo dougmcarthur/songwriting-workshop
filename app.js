@@ -174,8 +174,8 @@ const SLIDES = [
   {
     id: 'hero-journey',
     type: 'hero',
-    eyebrow: 'A borrowed map',
-    headline: 'You\'ve seen this\nstructure before.',
+    eyebrow: 'The Hero\'s Journey in Song',
+    headline: 'Mapping Narrative\nto Song Structure',
     rows: [
       { journey:'Ordinary World',          song:'Verse 1 — establish where we are' },
       { journey:'The Call',                song:'Pre-chorus or late V1 turn' },
