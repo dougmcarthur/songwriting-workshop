@@ -249,6 +249,93 @@ body,
 .platform-btn:hover { opacity: 0.85; }
 .platform-arrow { opacity: 0.65; }
 
+/* ─── Playlist slide ─────────────────────────────────────────────────────────── */
+.playlist-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1em;
+  margin-bottom: 0.5em;
+}
+
+.playlist-create-btn {
+  flex-shrink: 0;
+  background: #1DB954;
+  color: #000;
+  border: none;
+  border-radius: 20px;
+  padding: 0.5em 1.2em;
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.55em;
+  cursor: pointer;
+  letter-spacing: -0.01em;
+  transition: opacity 0.15s, transform 0.1s;
+  white-space: nowrap;
+}
+.playlist-create-btn:hover { opacity: 0.88; transform: scale(1.03); }
+.playlist-create-btn.copied { background: #19a349; }
+
+.playlist-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.56em;
+}
+
+.playlist-table thead th {
+  border: none;
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+  padding: 0.3em 0.5em;
+  font-family: var(--font-head);
+  font-size: 0.8em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.38;
+  text-align: left;
+  font-weight: 600;
+}
+
+.playlist-table .col-num {
+  width: 2.2em;
+  text-align: right;
+  padding-right: 0.8em !important;
+  opacity: 0.32;
+}
+
+.playlist-table .col-year {
+  width: 3.5em;
+  text-align: right;
+  opacity: 0.38;
+}
+
+.playlist-table tr.pl-group-row td {
+  padding: 0.75em 0.5em 0.2em;
+  font-family: var(--font-head);
+  font-size: 0.82em;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.38;
+  font-weight: 600;
+}
+
+.playlist-table tr.pl-song-row td {
+  padding: 0.25em 0.5em;
+  vertical-align: middle;
+}
+
+.playlist-table tr.pl-song-row:hover {
+  background: rgba(255,255,255,0.05);
+}
+
+.playlist-table .pl-title {
+  font-weight: 500;
+  color: #fff;
+}
+
+.playlist-table .pl-artist {
+  opacity: 0.52;
+}
+
 /* ─── W1 Activity: Build Your Skeleton ──────────────────────────────────────── */
 .activity-view {
   width: 100%;

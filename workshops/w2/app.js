@@ -184,6 +184,8 @@ function init() {
     const btn = e.target.closest('.song-link');
     if (btn) { openSongOverlay(btn.dataset.song); return; }
     if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) closeSongOverlay();
+    const copyBtn = e.target.closest('#playlist-copy-btn');
+    if (copyBtn) { handlePlaylistCopy(copyBtn); return; }
   });
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape' && document.querySelector('.song-overlay')) {
@@ -341,28 +343,67 @@ function renderSlide(slide, index) {
     }
 
     case 'playlist': {
-      const groups = PLAYLIST_GROUPS.map(g => {
-        const items = g.songs.map(sid => {
+      let num = 0;
+      const rows = PLAYLIST_GROUPS.map(g => {
+        const groupRow = `<tr class="pl-group-row"><td class="col-num"></td><td colspan="3">${esc(g.label)}</td></tr>`;
+        const songRows = g.songs.map(sid => {
           const song = SONGS[sid];
           if (!song) return '';
+          num++;
           return `
-            <li style="margin-bottom:0.55em">
-              <button class="song-link" data-song="${sid}" style="display:block;font-weight:600;line-height:1.3">${esc(song.title)} ↗</button>
-              <span style="display:block;font-size:0.75em;text-transform:uppercase;letter-spacing:0.07em;opacity:0.42;margin-top:0.15em">${esc(song.artist)} · ${esc(song.year)}</span>
-            </li>`;
+            <tr class="pl-song-row">
+              <td class="col-num">${num}</td>
+              <td class="pl-title"><button class="song-link" data-song="${sid}">${esc(song.title)}</button></td>
+              <td class="pl-artist">${esc(song.artist)}</td>
+              <td class="col-year">${esc(song.year)}</td>
+            </tr>
+          `;
         }).join('');
-        return `<p style="font-size:0.5em;text-transform:uppercase;letter-spacing:.1em;opacity:0.5;margin:0.75em 0 0.25em">${esc(g.label)}</p><ul style="font-size:0.65em;margin:0">${items}</ul>`;
+        return groupRow + songRows;
       }).join('');
       return `
         ${ey}
-        <h2>${nl(slide.headline)}</h2>
-        <div style="margin-top:0.25em">${groups}</div>
+        <div class="playlist-header">
+          <h2 style="font-size:1.3em;margin:0">${nl(slide.headline)}</h2>
+          <button class="playlist-create-btn" id="playlist-copy-btn">Create Playlist ↗</button>
+        </div>
+        <table class="playlist-table">
+          <thead><tr>
+            <th class="col-num">#</th>
+            <th>Title</th>
+            <th>Artist</th>
+            <th class="col-year">Year</th>
+          </tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
       `;
     }
 
     default:
       return `<p>Slide ${index + 1}</p>`;
   }
+}
+
+// ─── Playlist → Spotlistr ─────────────────────────────────────────────────────
+
+function handlePlaylistCopy(btn) {
+  const lines = [];
+  PLAYLIST_GROUPS.forEach(g => {
+    g.songs.forEach(sid => {
+      const s = SONGS[sid];
+      if (s) lines.push(`${s.title} - ${s.artist}`);
+    });
+  });
+  const text = lines.join('\n');
+  navigator.clipboard.writeText(text).then(() => {
+    const orig = btn.textContent;
+    btn.textContent = 'Copied! Opening Spotlistr…';
+    btn.classList.add('copied');
+    window.open('https://spotlistr.com', '_blank', 'noopener,noreferrer');
+    setTimeout(() => { btn.textContent = orig; btn.classList.remove('copied'); }, 3000);
+  }).catch(() => {
+    window.open('https://spotlistr.com', '_blank', 'noopener,noreferrer');
+  });
 }
 
 // ─── QR Code ──────────────────────────────────────────────────────────────────
