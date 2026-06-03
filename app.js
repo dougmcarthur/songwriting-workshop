@@ -629,13 +629,13 @@ function buildActivity(section) {
       </div>
       <div class="zones-col">
         ${ZONES.map(z => `
-          <div class="drop-zone" id="zone-${z.id}" data-zone="${z.id}">
-            <div class="zone-label-col type-${z.type}">
-              <div class="zone-label">${esc(z.label)}</div>
+          <div class="zone-row">
+            <div class="drop-zone" id="zone-${z.id}" data-zone="${z.id}">
+              <div class="zone-content" data-zone-content="${z.id}">
+                <div class="zone-placeholder">drag a card here</div>
+              </div>
             </div>
-            <div class="zone-content" data-zone-content="${z.id}">
-              <div class="zone-placeholder">drag a card here</div>
-            </div>
+            <div class="zone-label-side">${esc(z.label)}</div>
           </div>
         `).join('')}
       </div>
@@ -659,7 +659,7 @@ function resetActivity() {
 
   ZONES.forEach(z => {
     const content = document.querySelector(`[data-zone-content="${z.id}"]`);
-    if (content) content.innerHTML = '<div class="zone-placeholder">drop a card here</div>';
+    if (content) content.innerHTML = '<div class="zone-placeholder">drag a card here</div>';
     const zone = document.getElementById(`zone-${z.id}`);
     if (zone) zone.classList.remove('has-card', 'drag-over');
   });

@@ -425,47 +425,47 @@ body,
   min-height: 0;
 }
 
-.drop-zone {
+/* Each zone row: [drop container] [dim label] */
+.zone-row {
   display: flex;
   align-items: stretch;
+  gap: 10px;
+  flex: 1;
+  min-height: 0;
+}
+
+.drop-zone {
+  flex: 1;
+  display: flex;
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: 7px;
   overflow: hidden;
-  flex: 1;
   min-height: 0;
   transition: border-color 0.15s, background 0.15s;
 }
 
 .drop-zone.drag-over {
-  border-color: rgba(255,255,255,0.42);
+  border-color: rgba(255,255,255,0.38);
   background: rgba(255,255,255,0.04);
 }
 
-/* Zone label — always visible, even when a card is placed */
-.zone-label-col {
-  width: 68px;
-  flex-shrink: 0;
+/* Label sits to the right of the container — always visible */
+.zone-label-side {
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 6px 4px;
-}
-
-.zone-label-col.type-verse  { background: rgba(123,167,212,0.22); }
-.zone-label-col.type-chorus { background: rgba(200,168,74,0.22);  }
-.zone-label-col.type-bridge { background: rgba(212,123,170,0.22); }
-.zone-label-col.type-outro  { background: rgba(140,140,140,0.12); }
-
-.zone-label {
+  min-width: 46px;
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 0.78em;
+  font-size: 0.62em;
   letter-spacing: -0.01em;
+  opacity: 0.3;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 
 .zone-content {
   flex: 1;
-  padding: 6px 12px;
+  padding: 8px 14px;
   display: flex;
   align-items: center;
   min-width: 0;
