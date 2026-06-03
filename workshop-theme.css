@@ -16,7 +16,7 @@ body,
 
 /* Breathing room on all slides */
 .reveal .slides section {
-  padding: 8px 60px;
+  padding: 28px 52px;
   box-sizing: border-box;
 }
 
@@ -359,6 +359,7 @@ body,
   display: flex;
   align-items: center;
   margin-top: 0.15em;
+  overflow: hidden;
 }
 
 .hero-map {
