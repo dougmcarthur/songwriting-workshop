@@ -326,25 +326,18 @@ function renderSlide(slide, index) {
     case 'structure': {
       const blockColor = { verse:'#7BA7D4', chorus:'#C8A84A', bridge:'#D47BAA', prechorus:'#7BC4C4' };
       const blocks = slide.blocks.map(b =>
-        `<span style="background:${blockColor[b.type]||'#888'};color:#000;padding:6px 14px;border-radius:3px;font-weight:700;font-size:0.9em">${esc(b.l)}</span>`
+        `<span style="background:${blockColor[b.type]||'#888'};color:#000;padding:6px 16px;border-radius:4px;font-weight:700;font-size:0.95em;font-family:'Poppins',sans-serif">${esc(b.l)}</span>`
       ).join('');
       const legend = slide.legend.map(l =>
-        `<span style="display:inline-flex;align-items:center;gap:5px;font-size:0.65em;opacity:0.8">
-           <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${esc(l.dot)}"></span>${esc(l.label)}
+        `<span style="display:inline-flex;align-items:center;gap:6px;font-size:0.68em;opacity:0.75">
+           <span style="display:inline-block;width:11px;height:11px;border-radius:2px;background:${esc(l.dot)}"></span>${esc(l.label)}
          </span>`
-      ).join('');
-      const defs = slide.sections.map(s =>
-        `<p style="font-size:0.65em;margin-bottom:0.4em">
-           <span style="background:${blockColor[s.type]||'#888'};color:#000;padding:2px 8px;border-radius:2px;font-weight:700;margin-right:6px;font-size:0.9em">${esc(s.letter)}</span>
-           <strong>${esc(s.label)}</strong> — ${esc(s.desc)}
-         </p>`
       ).join('');
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:0.5em 0">${blocks}</div>
-        <div style="display:flex;gap:1.5em;flex-wrap:wrap;margin-bottom:0.75em">${legend}</div>
-        ${defs}
+        <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:1em 0 0.75em">${blocks}</div>
+        <div style="display:flex;gap:2em;flex-wrap:wrap;justify-content:center">${legend}</div>
       `;
     }
 
@@ -358,11 +351,11 @@ function renderSlide(slide, index) {
           ? `<button class="song-link" data-song="${era.songId}" style="font-size:inherit;background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0">${esc(era.song)}</button>`
           : esc(era.song);
         return `
-          <div style="border-top:2px solid rgba(255,255,255,0.2);padding-top:0.75em">
+          <div style="border-top:2px solid rgba(255,255,255,0.15);padding-top:0.75em;text-align:center">
             <p style="opacity:0.5;font-size:0.75em;margin-bottom:0.2em">${esc(era.year)}</p>
             <p style="font-weight:600;margin-bottom:0.2em">${esc(era.artist)}</p>
-            <p style="font-size:0.85em;margin-bottom:0.5em">${songEl}</p>
-            <div style="display:flex;gap:3px;flex-wrap:wrap">${mini}</div>
+            <p style="font-size:0.85em;margin-bottom:0.55em">${songEl}</p>
+            <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:center">${mini}</div>
           </div>
         `;
       }).join('');
