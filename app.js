@@ -240,7 +240,6 @@ const state = { panel: null };
 
 function init() {
   buildSlides();
-  generateQR();
   Reveal.initialize({
     controls: true,
     controlsTutorial: false,
@@ -256,12 +255,15 @@ function init() {
     transition: 'slide',
     transitionSpeed: 'fast',
     backgroundTransition: 'none',
-    width: '100%',
-    height: '100%',
+    width: window.innerWidth,
+    height: window.innerHeight,
     margin: 0,
     minScale: 1,
     maxScale: 1,
+  }).then(() => {
+    generateQR();
   });
+  window.addEventListener('resize', () => Reveal.layout());
   setupControls();
   setupPanels();
   document.addEventListener('click', e => {
