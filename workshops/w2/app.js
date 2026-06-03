@@ -175,38 +175,9 @@ const state = { placements: {} };
 function init() {
   buildSlides();
   Reveal.initialize({
-    controls: true,
-    controlsTutorial: false,
-    controlsLayout: 'bottom-right',
-    progress: true,
-    slideNumber: false,
     hash: true,
-    history: true,
-    keyboard: true,
-    overview: true,
-    center: false,
-    touch: true,
-    transition: 'slide',
-    transitionSpeed: 'fast',
-    backgroundTransition: 'none',
     width: 1280,
     height: 720,
-    margin: 0.04,
-  }).then(() => {
-    generateQR();
-  });
-  window.addEventListener('resize', () => Reveal.layout());
-  setupControls();
-  setupActivity();
-  document.addEventListener('click', e => {
-    const btn = e.target.closest('.song-link');
-    if (btn) { openSongOverlay(btn.dataset.song); return; }
-    if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) closeSongOverlay();
-  });
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') {
-      if (document.querySelector('.song-overlay')) { closeSongOverlay(); e.stopImmediatePropagation(); return; }
-    }
   });
 }
 
