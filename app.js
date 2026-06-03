@@ -445,6 +445,32 @@ function renderSlide(slide, index) {
         const m = Math.ceil(w.length / 2);
         return [w.slice(0, m).join(' '), w.slice(m).join(' ')];
       };
+      // Pine tree: trunk + two-tier canopy
+      const tree = (x, by) =>
+        `<rect x="${x-2}" y="${by-12}" width="4" height="12" fill="#6b4a28"/>` +
+        `<polygon points="${x-10},${by-12} ${x},${by-34} ${x+10},${by-12}" fill="#3a6230"/>` +
+        `<polygon points="${x-7},${by-30} ${x},${by-48} ${x+7},${by-30}" fill="#4a7a40"/>`;
+      const treeRow = (xs, by) => xs.map(x => tree(x, by)).join('');
+      // Mountain: polygon + snow cap
+      const mtn = (px, py, hw, baseY, front) => {
+        const fill = front ? '#9a8a5e' : '#b0a070';
+        const stroke = front ? '#7a6a40' : '#8a7848';
+        const snowY = py + (baseY - py) * 0.18;
+        const snowHW = hw * 0.15;
+        return `<polygon points="${px-hw},${baseY} ${px},${py} ${px+hw},${baseY}" fill="${fill}" stroke="${stroke}" stroke-width="0.8" stroke-linejoin="round"/>` +
+               `<polygon points="${px-snowHW},${snowY} ${px},${py} ${px+snowHW},${snowY}" fill="#ede8d8" opacity="0.88"/>`;
+      };
+      // Mountain ranges flanking stops 3 and 5
+      const mtns = [
+        mtn(420, 168, 62, 405, false), mtn(560, 168, 62, 405, false),
+        mtn(390, 226, 46, 415, true),  mtn(590, 226, 46, 415, true),
+        mtn(800, 168, 60, 405, false), mtn(944, 168, 60, 405, false),
+        mtn(774, 226, 44, 415, true),  mtn(968, 226, 44, 415, true),
+      ].join('');
+      // Pine tree clusters in valleys near stops 2 and 4
+      const trees =
+        treeRow([190,208,226,244], 442) + treeRow([356,374,392,410], 442) +
+        treeRow([562,580,598,616], 442) + treeRow([744,762,780,798], 442);
       const stopsSvg = slide.rows.map((r, i) => {
         const { x, y } = POS[i];
         const lines = wrapLbl(r.journey);
@@ -452,9 +478,10 @@ function renderSlide(slide, index) {
           `<tspan x="${x}" dy="${li ? '1.3em' : '0'}">${esc(l)}</tspan>`
         ).join('');
         return `<g class="hero-stop" data-hero="${i}" tabindex="0" role="button" aria-label="${esc(r.journey)}">
-          <circle cx="${x}" cy="${y}" r="44" fill="rgba(200,149,58,0.1)" stroke="rgba(200,149,58,0.45)" stroke-width="1.5"/>
-          <text x="${x}" y="${y}" dy="0.35em" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Poppins,sans-serif" font-weight="700" font-size="22">${i + 1}</text>
-          <text x="${x}" y="${y + 60}" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="DM Sans,sans-serif" font-size="12.5" font-weight="500">${linesHtml}</text>
+          <circle cx="${x}" cy="${y}" r="44" fill="#c8953a" stroke="#7a5010" stroke-width="1.8" opacity="0.92"/>
+          <circle cx="${x}" cy="${y}" r="36" fill="none" stroke="#7a5010" stroke-width="1" opacity="0.4"/>
+          <text x="${x}" y="${y}" dy="0.35em" text-anchor="middle" fill="#3a1800" font-family="Poppins,sans-serif" font-weight="700" font-size="22">${i + 1}</text>
+          <text x="${x}" y="${y + 62}" text-anchor="middle" fill="#3a1800" font-family="DM Sans,sans-serif" font-size="13" font-weight="600" opacity="0.85">${linesHtml}</text>
         </g>`;
       }).join('');
       return `
@@ -463,18 +490,55 @@ function renderSlide(slide, index) {
           <h2 style="margin-bottom:0.2em">${nl(slide.headline)}</h2>
           <div class="hero-map-wrap">
             <svg class="hero-map" viewBox="0 0 1160 500" xmlns="http://www.w3.org/2000/svg">
-              <g fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.045)" stroke-width="1" stroke-linejoin="round">
-                <path d="M840,490 L885,375 L935,435 L1005,305 L1065,370 L1125,290 L1160,385 L1160,490Z"/>
-                <polygon points="550,490 524,455 576,455"/>
-                <polygon points="588,496 559,453 617,453"/>
-                <polygon points="626,490 597,453 655,453"/>
+              <defs>
+                <radialGradient id="hpg" cx="50%" cy="42%" r="74%">
+                  <stop offset="0%" stop-color="#f2e5bb"/>
+                  <stop offset="50%" stop-color="#e5d09a"/>
+                  <stop offset="100%" stop-color="#c9b07c"/>
+                </radialGradient>
+                <radialGradient id="hvg" cx="50%" cy="50%" r="68%">
+                  <stop offset="25%" stop-color="rgba(0,0,0,0)"/>
+                  <stop offset="100%" stop-color="rgba(40,18,0,0.42)"/>
+                </radialGradient>
+                <filter id="hps" x="-15%" y="-15%" width="130%" height="130%">
+                  <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#3a1000" flood-opacity="0.5"/>
+                </filter>
+              </defs>
+
+              <rect width="1160" height="500" fill="url(#hpg)"/>
+              <rect width="1160" height="500" fill="url(#hvg)"/>
+              <rect x="7" y="7" width="1146" height="486" rx="5" fill="none" stroke="rgba(100,62,10,0.5)" stroke-width="2.2"/>
+              <rect x="13" y="13" width="1134" height="474" rx="3" fill="none" stroke="rgba(100,62,10,0.22)" stroke-width="1"/>
+
+              <!-- Ocean: left side (Ordinary World) -->
+              <path d="M20,272 Q90,260 162,272 L162,493 L20,493Z" fill="#b8d0e4" opacity="0.28"/>
+              <g fill="none" stroke="#5a8aaa" stroke-width="1.4" stroke-linecap="round" opacity="0.62">
+                ${[310,326,342,358,374,390,406,422,438,454,470,486].map((wy, wi) =>
+                  `<path d="M${22+wi},${wy} Q${72+wi},${wy-10} ${122+wi},${wy} Q${148+wi},${wy+8} ${158+wi},${wy+4}"/>`
+                ).join('')}
               </g>
-              <g fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1.8" stroke-linecap="round">
-                <path d="M75,464 Q145,452 215,464 Q285,476 355,464"/>
-                <path d="M75,476 Q145,464 215,476 Q285,488 355,476"/>
-              </g>
+
+              <!-- Terrain: mountains and trees -->
+              ${mtns}
+              ${trees}
+
+              <!-- Journey path -->
               <path d="M90,260 C185,260 200,385 300,385 C400,385 395,100 490,100 C585,100 580,385 680,385 C775,385 770,100 870,100 C965,100 970,260 1070,260"
-                    fill="none" stroke="rgba(200,149,58,0.5)" stroke-width="2.5" stroke-dasharray="10 7" stroke-linecap="round"/>
+                    fill="none" stroke="#3a0808" stroke-width="2.5" stroke-dasharray="10 7" stroke-linecap="round"
+                    opacity="0.28" filter="url(#hps)"/>
+              <path d="M90,260 C185,260 200,385 300,385 C400,385 395,100 490,100 C585,100 580,385 680,385 C775,385 770,100 870,100 C965,100 970,260 1070,260"
+                    fill="none" stroke="#8b2020" stroke-width="2.8" stroke-dasharray="10 7" stroke-linecap="round"/>
+
+              <!-- Compass rose -->
+              <g transform="translate(1100,452)" fill="#5a3810" opacity="0.78">
+                <polygon points="0,-17 3.5,-6.5 0,-2 -3.5,-6.5"/>
+                <polygon points="0,17 3.5,6.5 0,2 -3.5,6.5"/>
+                <polygon points="-17,0 -6.5,3.5 -2,0 -6.5,-3.5"/>
+                <polygon points="17,0 6.5,3.5 2,0 6.5,-3.5"/>
+                <circle cx="0" cy="0" r="3.5" fill="#c8953a" stroke="#5a3810" stroke-width="1"/>
+                <text x="0" y="-22" text-anchor="middle" font-family="serif" font-size="9" font-weight="bold">N</text>
+              </g>
+
               ${stopsSvg}
             </svg>
           </div>
