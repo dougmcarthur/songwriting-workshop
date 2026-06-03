@@ -250,9 +250,8 @@ function renderSlide(slide, index) {
     case 'hook':
       return `
         ${ey}
-        <h2 class="r-fit-text">${nl(slide.headline)}</h2>
-        <p>${nl(slide.body)}</p>
-        <p style="font-size:0.4em;opacity:0.4;margin-top:1.5em">${location.hostname + location.pathname}</p>
+        <h2 style="font-size:2.8em;line-height:1.1;margin-bottom:0.4em;letter-spacing:-0.03em">${nl(slide.headline)}</h2>
+        <p style="font-size:0.72em;opacity:0.72;margin:0">${nl(slide.body)}</p>
       `;
 
     case 'comparison': {
@@ -319,13 +318,13 @@ function renderSlide(slide, index) {
 
     case 'casestudy': {
       const listenBtn = slide.songId
-        ? `<p style="margin-top:1em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.4);color:inherit;cursor:pointer;padding:0.4em 1em;border-radius:3px;font-size:0.6em">Listen to this song ↗</button></p>`
+        ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.35);color:inherit;cursor:pointer;padding:0.35em 1em;border-radius:4px;font-size:0.6em;font-family:inherit">Listen to this song ↗</button></p>`
         : '';
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <h3>${esc(slide.subhead)}</h3>
-        <p style="font-size:0.7em">${nl(slide.body)}</p>
+        <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
+        <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em">${nl(slide.body)}</p>
         ${listenBtn}
       `;
     }

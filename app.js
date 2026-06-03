@@ -319,9 +319,8 @@ function renderSlide(slide, index) {
     case 'hook':
       return `
         ${ey}
-        <h2 class="r-fit-text">${nl(slide.headline)}</h2>
-        <p>${nl(slide.body)}</p>
-        <p style="font-size:0.4em;opacity:0.4;margin-top:1.5em">${location.hostname + location.pathname}</p>
+        <h2 style="font-size:2.8em;line-height:1.1;margin-bottom:0.4em;letter-spacing:-0.03em">${nl(slide.headline)}</h2>
+        <p style="font-size:0.72em;opacity:0.72;margin:0">${nl(slide.body)}</p>
       `;
 
     case 'structure': {
@@ -377,14 +376,14 @@ function renderSlide(slide, index) {
     case 'table': {
       const rows = slide.rows.map(r => {
         const exampleCell = r.songId
-          ? `<button class="song-link" data-song="${r.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit">${esc(r.example)}</button>`
+          ? `<button class="song-link" data-song="${r.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;text-align:left">${esc(r.example)}</button>`
           : esc(r.example);
-        return `<tr><td>${esc(r.name)}</td><td>${esc(r.desc)}</td><td>${exampleCell}</td></tr>`;
+        return `<tr><td style="font-weight:600">${esc(r.name)}</td><td style="opacity:0.75">${esc(r.desc)}</td><td>${exampleCell}</td></tr>`;
       }).join('');
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <table style="font-size:0.7em">
+        <table style="font-size:0.68em;margin-top:0.5em">
           <thead><tr><th>Structure</th><th>What it is</th><th>Example</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
@@ -392,18 +391,33 @@ function renderSlide(slide, index) {
     }
 
     case 'evidence': {
-      const items = slide.evidence.map(e => {
+      const CARD_PALETTES = [
+        { bg: 'linear-gradient(135deg, #2a1f0e 0%, #3d2f14 100%)', icon: '♪', accent: '#c8953a' },
+        { bg: 'linear-gradient(135deg, #1a0e0e 0%, #2e1818 100%)', icon: '♩', accent: '#8a3535' },
+        { bg: 'linear-gradient(135deg, #0e1a2e 0%, #162440 100%)', icon: '♫', accent: '#3a6aaa' },
+      ];
+      const cards = slide.evidence.map((e, i) => {
+        const pal = CARD_PALETTES[i % CARD_PALETTES.length];
         const titleEl = e.songId
-          ? `<button class="song-link" data-song="${e.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;font-weight:700">${esc(e.title)}</button>`
+          ? `<button class="song-link" data-song="${e.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font:inherit;font-weight:700;display:block;text-align:left;width:100%">${esc(e.title)}</button>`
           : `<strong>${esc(e.title)}</strong>`;
-        return `<li style="margin-bottom:0.4em">${titleEl} <em style="opacity:0.7">${esc(e.artist)}</em> — ${esc(e.note)}</li>`;
+        return `
+          <div class="evidence-card">
+            <div class="evidence-card-art" style="background:${pal.bg};color:${pal.accent}">${pal.icon}</div>
+            <div class="evidence-card-body">
+              <div class="evidence-card-title">${titleEl}</div>
+              <div class="evidence-card-artist">${esc(e.artist)}</div>
+              <div class="evidence-card-note">${esc(e.note)}</div>
+            </div>
+          </div>
+        `;
       }).join('');
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <p style="font-size:2.5em;font-weight:700;margin:0.1em 0">${esc(slide.answer)}</p>
-        <ul style="font-size:0.75em;margin:0.5em 0">${items}</ul>
-        <p style="font-size:0.7em;opacity:0.7">${esc(slide.body)}</p>
+        <p style="font-size:2em;font-weight:700;font-family:'Poppins',sans-serif;letter-spacing:-0.03em;margin:0.1em 0 0.4em">${esc(slide.answer)}</p>
+        <div class="evidence-grid">${cards}</div>
+        <p style="font-size:0.6em;opacity:0.55;margin-top:0.5em">${esc(slide.body)}</p>
       `;
     }
 
@@ -423,13 +437,13 @@ function renderSlide(slide, index) {
 
     case 'casestudy': {
       const listenBtn = slide.songId
-        ? `<p style="margin-top:1em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.4);color:inherit;cursor:pointer;padding:0.4em 1em;border-radius:3px;font-size:0.6em">Listen to this song ↗</button></p>`
+        ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.35);color:inherit;cursor:pointer;padding:0.35em 1em;border-radius:4px;font-size:0.6em;font-family:inherit">Listen to this song ↗</button></p>`
         : '';
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <h3>${esc(slide.subhead)}</h3>
-        <p style="font-size:0.7em">${nl(slide.body)}</p>
+        <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
+        <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em">${nl(slide.body)}</p>
         ${listenBtn}
       `;
     }
