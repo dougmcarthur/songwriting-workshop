@@ -402,14 +402,14 @@ body,
   transform: translate(-50%, -50%);
   background: #1c1c24;
   border: 1px solid rgba(200,149,58,0.28);
-  border-radius: 14px;
-  padding: 20px 28px 24px;
-  min-width: 300px;
-  max-width: 400px;
+  border-radius: 20px;
+  padding: 32px 52px 40px;
+  min-width: 580px;
+  max-width: 740px;
   width: 90vw;
   font-family: var(--font-body);
   color: #fff;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+  box-shadow: 0 24px 80px rgba(0,0,0,0.7);
   text-align: center;
 }
 
@@ -417,7 +417,7 @@ body,
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 12px;
+  margin-bottom: 20px;
 }
 
 .hero-card-prev,
@@ -425,10 +425,10 @@ body,
   background: none;
   border: none;
   color: rgba(255,255,255,0.38);
-  font-size: 1.05em;
+  font-size: 1.6em;
   cursor: pointer;
-  padding: 4px 10px;
-  border-radius: 5px;
+  padding: 6px 14px;
+  border-radius: 7px;
   transition: color 0.12s, background 0.12s;
   line-height: 1;
 }
@@ -439,7 +439,7 @@ body,
 }
 
 .hero-card-num {
-  font-size: 0.66em;
+  font-size: 0.85em;
   opacity: 0.35;
   letter-spacing: 0.06em;
 }
@@ -447,38 +447,38 @@ body,
 .hero-card-journey {
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 1.35em;
+  font-size: 2.2em;
   letter-spacing: -0.02em;
-  line-height: 1.2;
+  line-height: 1.15;
   color: #c8953a;
-  margin-bottom: 0.5em;
+  margin-bottom: 0.4em;
 }
 
 .hero-card-divider {
-  font-size: 0.6em;
+  font-size: 0.82em;
   opacity: 0.35;
   text-transform: uppercase;
   letter-spacing: 0.1em;
-  margin-bottom: 0.55em;
+  margin-bottom: 0.5em;
 }
 
 .hero-card-song {
-  font-size: 0.88em;
-  line-height: 1.55;
+  font-size: 1.25em;
+  line-height: 1.5;
   opacity: 0.82;
-  margin-bottom: 1em;
+  margin-bottom: 1.2em;
 }
 
 .hero-dots {
   display: flex;
   justify-content: center;
-  gap: 6px;
+  gap: 9px;
 }
 
 .hero-dot {
   display: inline-block;
-  width: 6px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: rgba(255,255,255,0.16);
 }
