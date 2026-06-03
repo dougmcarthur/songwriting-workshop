@@ -245,6 +245,17 @@ function init() {
     hash: true,
     width: 1280,
     height: 720,
+    center: true,
+  });
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.song-link');
+    if (btn) { openSongOverlay(btn.dataset.song); return; }
+    if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) closeSongOverlay();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.querySelector('.song-overlay')) {
+      closeSongOverlay(); e.stopImmediatePropagation();
+    }
   });
 }
 
@@ -257,10 +268,7 @@ function buildSlides() {
     if (slide.type === 'activity') {
       buildActivity(section);
     } else {
-      const inner = document.createElement('div');
-      inner.className = 'slide-inner';
-      inner.innerHTML = renderSlide(slide, i);
-      section.appendChild(inner);
+      section.innerHTML = renderSlide(slide, i);
     }
     container.appendChild(section);
   });
@@ -293,97 +301,91 @@ function setupActivity() {
 
 // ─── Slide renderers ─────────────────────────────────────────────────────────
 
-function renderSlide(slide, index) {
-  const eyebrow = slide.eyebrow
-    ? `<div class="slide-eyebrow">${esc(slide.eyebrow)}</div>`
+const BLOCK_COLORS = { verse: '#7BA7D4', chorus: '#C8A84A', bridge: '#D47BAA', prechorus: '#7BC4C4' };
+
+function nl(str) { return esc(str).replace(/\n/g, '<br>'); }
+
+function eyebrowHtml(text) {
+  return text
+    ? `<p style="font-size:0.45em;text-transform:uppercase;letter-spacing:.15em;opacity:0.55;margin:0 0 0.4em">${esc(text)}</p>`
     : '';
+}
+
+function renderSlide(slide, index) {
+  const ey = eyebrowHtml(slide.eyebrow);
 
   switch (slide.type) {
 
     case 'hook':
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <p class="slide-body">${esc(slide.body)}</p>
-        <div class="qr-block">
-          <div class="qr-wrap" id="qr-code-el"></div>
-          <div class="qr-info">
-            <span class="qr-cta">Students: scan to follow along</span>
-            <span class="qr-sub">Open on your phone — no install needed</span>
-            <span class="qr-url" id="qr-url-text"></span>
-          </div>
-        </div>
+        ${ey}
+        <h2 class="r-fit-text">${nl(slide.headline)}</h2>
+        <p>${nl(slide.body)}</p>
+        <p style="font-size:0.4em;opacity:0.4;margin-top:1.5em">${location.hostname + location.pathname}</p>
       `;
 
     case 'structure': {
+      const blockColor = { verse:'#7BA7D4', chorus:'#C8A84A', bridge:'#D47BAA', prechorus:'#7BC4C4' };
       const blocks = slide.blocks.map(b =>
-        `<div class="s-block ${b.type}">${b.l}</div>`
+        `<span style="background:${blockColor[b.type]||'#888'};color:#000;padding:6px 14px;border-radius:3px;font-weight:700;font-size:0.9em">${esc(b.l)}</span>`
       ).join('');
       const legend = slide.legend.map(l =>
-        `<div class="legend-item">
-           <div class="legend-dot" style="background:${l.dot}"></div>
-           ${esc(l.label)}
-         </div>`
+        `<span style="display:inline-flex;align-items:center;gap:5px;font-size:0.65em;opacity:0.8">
+           <span style="display:inline-block;width:10px;height:10px;border-radius:2px;background:${esc(l.dot)}"></span>${esc(l.label)}
+         </span>`
       ).join('');
       const defs = slide.sections.map(s =>
-        `<p class="slide-body" style="margin-bottom:.55rem">
-           <strong><span class="s-block ${s.type}" style="display:inline-flex;width:auto;height:auto;padding:.1rem .4rem;font-size:.8rem;vertical-align:middle;margin-right:.4rem">${s.letter}</span>${esc(s.label)}</strong>
-           — ${esc(s.desc)}
+        `<p style="font-size:0.65em;margin-bottom:0.4em">
+           <span style="background:${blockColor[s.type]||'#888'};color:#000;padding:2px 8px;border-radius:2px;font-weight:700;margin-right:6px;font-size:0.9em">${esc(s.letter)}</span>
+           <strong>${esc(s.label)}</strong> — ${esc(s.desc)}
          </p>`
       ).join('');
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <div class="structure-row">${blocks}</div>
-        <div class="structure-legend" style="margin-bottom:1.25rem">${legend}</div>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;margin:0.5em 0">${blocks}</div>
+        <div style="display:flex;gap:1.5em;flex-wrap:wrap;margin-bottom:0.75em">${legend}</div>
         ${defs}
       `;
     }
 
     case 'eras': {
       const cards = slide.eras.map(era => {
-        const mini = era.blocks.map(b => {
-          const cls = b === 'v' ? 'v' : b === 'c' ? 'c' : 'b';
-          const lbl = b === 'v' ? 'V' : b === 'c' ? 'C' : 'B';
-          return `<div class="mini-block ${cls}">${lbl}</div>`;
-        }).join('');
-        const songDisplay = era.songId
-          ? `<button class="song-link" data-song="${era.songId}">${esc(era.song)}</button>`
+        const blockColor = { v:'#7BA7D4', c:'#C8A84A', b:'#D47BAA' };
+        const mini = era.blocks.map(b =>
+          `<span style="background:${blockColor[b]||'#888'};color:#000;padding:2px 6px;border-radius:2px;font-size:0.7em;font-weight:700">${b==='v'?'V':b==='c'?'C':'B'}</span>`
+        ).join('');
+        const songEl = era.songId
+          ? `<button class="song-link" data-song="${era.songId}" style="font-size:inherit;background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0">${esc(era.song)}</button>`
           : esc(era.song);
         return `
-          <div class="era-card">
-            <div class="yr">${esc(era.year)}</div>
-            <div class="artist">${esc(era.artist)}</div>
-            <div class="song">${songDisplay}</div>
-            <div class="mini-blocks">${mini}</div>
+          <div style="border-top:2px solid rgba(255,255,255,0.2);padding-top:0.75em">
+            <p style="opacity:0.5;font-size:0.75em;margin-bottom:0.2em">${esc(era.year)}</p>
+            <p style="font-weight:600;margin-bottom:0.2em">${esc(era.artist)}</p>
+            <p style="font-size:0.85em;margin-bottom:0.5em">${songEl}</p>
+            <div style="display:flex;gap:3px;flex-wrap:wrap">${mini}</div>
           </div>
         `;
       }).join('');
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <div class="era-grid">${cards}</div>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5em;font-size:0.8em;margin-top:0.5em">${cards}</div>
       `;
     }
 
     case 'table': {
       const rows = slide.rows.map(r => {
         const exampleCell = r.songId
-          ? `<button class="song-link" data-song="${r.songId}">${esc(r.example)}</button>`
+          ? `<button class="song-link" data-song="${r.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit">${esc(r.example)}</button>`
           : esc(r.example);
-        return `<tr>
-          <td class="col-name">${esc(r.name)}</td>
-          <td class="col-desc">${esc(r.desc)}</td>
-          <td class="col-example">${exampleCell}</td>
-        </tr>`;
+        return `<tr><td>${esc(r.name)}</td><td>${esc(r.desc)}</td><td>${exampleCell}</td></tr>`;
       }).join('');
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <table class="data-table">
-          <thead><tr>
-            <th>Structure</th><th>What it is</th><th>Example</th>
-          </tr></thead>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <table style="font-size:0.7em">
+          <thead><tr><th>Structure</th><th>What it is</th><th>Example</th></tr></thead>
           <tbody>${rows}</tbody>
         </table>
       `;
@@ -392,98 +394,76 @@ function renderSlide(slide, index) {
     case 'evidence': {
       const items = slide.evidence.map(e => {
         const titleEl = e.songId
-          ? `<button class="song-link" data-song="${e.songId}">${esc(e.title)}</button>`
-          : `<span class="ev-title">${esc(e.title)}</span>`;
-        return `<li>
-          <span class="ev-title">${titleEl}</span>
-          <span class="ev-artist">${esc(e.artist)}</span>
-          <span class="ev-note">— ${esc(e.note)}</span>
-        </li>`;
+          ? `<button class="song-link" data-song="${e.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;font-weight:700">${esc(e.title)}</button>`
+          : `<strong>${esc(e.title)}</strong>`;
+        return `<li style="margin-bottom:0.4em">${titleEl} <em style="opacity:0.7">${esc(e.artist)}</em> — ${esc(e.note)}</li>`;
       }).join('');
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <div class="big-answer">${esc(slide.answer)}</div>
-        <ul class="evidence-list">${items}</ul>
-        <p class="slide-body">${esc(slide.body)}</p>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <p style="font-size:2.5em;font-weight:700;margin:0.1em 0">${esc(slide.answer)}</p>
+        <ul style="font-size:0.75em;margin:0.5em 0">${items}</ul>
+        <p style="font-size:0.7em;opacity:0.7">${esc(slide.body)}</p>
       `;
     }
 
     case 'hero': {
       const rows = slide.rows.map(r =>
-        `<div class="hero-cell">${esc(r.journey)}</div>
-         <div class="hero-cell">${esc(r.song)}</div>`
+        `<tr><td>${esc(r.journey)}</td><td>${esc(r.song)}</td></tr>`
       ).join('');
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <div class="hero-grid">
-          <div class="hero-col-head">Hero's Journey</div>
-          <div class="hero-col-head">Song Structure</div>
-          ${rows}
-        </div>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <table style="font-size:0.65em;margin-top:0.5em">
+          <thead><tr><th>Hero's Journey</th><th>Song Structure</th></tr></thead>
+          <tbody>${rows}</tbody>
+        </table>
       `;
     }
 
     case 'casestudy': {
       const listenBtn = slide.songId
-        ? `<button class="song-link listen-btn" data-song="${slide.songId}">Listen to this song ↗</button>`
+        ? `<p style="margin-top:1em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.4);color:inherit;cursor:pointer;padding:0.4em 1em;border-radius:3px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <p class="slide-subhead">${esc(slide.subhead)}</p>
-        <p class="slide-body">${esc(slide.body)}</p>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <h3>${esc(slide.subhead)}</h3>
+        <p style="font-size:0.7em">${nl(slide.body)}</p>
         ${listenBtn}
       `;
     }
 
     case 'thesis': {
-      const [line1, line2] = slide.headline.split('\n');
+      const [line1, ...rest] = slide.headline.split('\n');
+      const line2 = rest.join('\n');
       return `
-        ${eyebrow}
-        <div class="thesis-wrap">
-          <span class="thesis-line muted">${esc(line1)}</span>
-          <span class="thesis-line lit">${esc(line2)}</span>
-          <span class="thesis-cue">${esc(slide.cue)}</span>
-        </div>
+        ${ey}
+        <h2 style="opacity:0.35">${esc(line1)}</h2>
+        <h2>${esc(line2)}</h2>
+        <p style="font-size:0.5em;opacity:0.55;margin-top:1em">${esc(slide.cue)}</p>
       `;
     }
 
-    case 'playlist':
-      return renderPlaylistSlide(slide, eyebrow);
+    case 'playlist': {
+      const groups = PLAYLIST_GROUPS.map(g => {
+        const items = g.songs.map(sid => {
+          const song = SONGS[sid];
+          if (!song) return '';
+          return `<li><button class="song-link" data-song="${sid}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;text-align:left">${esc(song.title)} <span style="opacity:0.6">— ${esc(song.artist)} · ${esc(song.year)}</span> ↗</button></li>`;
+        }).join('');
+        return `<p style="font-size:0.5em;text-transform:uppercase;letter-spacing:.1em;opacity:0.5;margin:0.75em 0 0.25em">${esc(g.label)}</p><ul style="font-size:0.65em;margin:0">${items}</ul>`;
+      }).join('');
+      return `
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <div style="margin-top:0.25em">${groups}</div>
+      `;
+    }
 
     default:
-      return `<p class="slide-body">Slide ${index + 1}</p>`;
+      return `<p>Slide ${index + 1}</p>`;
   }
-}
-
-function renderPlaylistSlide(slide, eyebrow) {
-  const groups = PLAYLIST_GROUPS.map(g => {
-    const items = g.songs.map(sid => {
-      const song = SONGS[sid];
-      if (!song) return '';
-      return `
-        <button class="song-link playlist-row" data-song="${sid}">
-          <span class="pl-title">${esc(song.title)}</span>
-          <span class="pl-meta">${esc(song.artist)} · ${song.year}</span>
-          <span class="pl-arrow">↗</span>
-        </button>
-      `;
-    }).join('');
-    return `
-      <div class="pl-group">
-        <div class="pl-group-label">${esc(g.label)}</div>
-        ${items}
-      </div>
-    `;
-  }).join('');
-
-  return `
-    ${eyebrow}
-    <h1 class="slide-headline" style="margin-bottom:1.25rem">${esc(slide.headline)}</h1>
-    <div class="pl-grid">${groups}</div>
-  `;
 }
 
 // ─── QR Code ─────────────────────────────────────────────────────────────────

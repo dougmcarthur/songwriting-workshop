@@ -178,6 +178,17 @@ function init() {
     hash: true,
     width: 1280,
     height: 720,
+    center: true,
+  });
+  document.addEventListener('click', e => {
+    const btn = e.target.closest('.song-link');
+    if (btn) { openSongOverlay(btn.dataset.song); return; }
+    if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) closeSongOverlay();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.querySelector('.song-overlay')) {
+      closeSongOverlay(); e.stopImmediatePropagation();
+    }
   });
 }
 
@@ -190,10 +201,7 @@ function buildSlides() {
     if (slide.type === 'activity') {
       buildActivity(section);
     } else {
-      const inner = document.createElement('div');
-      inner.className = 'slide-inner';
-      inner.innerHTML = renderSlide(slide, i);
-      section.appendChild(inner);
+      section.innerHTML = renderSlide(slide, i);
     }
     container.appendChild(section);
   });
@@ -226,168 +234,132 @@ function setupActivity() {
 
 // ─── Slide renderers ──────────────────────────────────────────────────────────
 
-function renderSlide(slide, index) {
-  const eyebrow = slide.eyebrow
-    ? `<div class="slide-eyebrow">${esc(slide.eyebrow)}</div>`
+function nl(str) { return esc(str).replace(/\n/g, '<br>'); }
+
+function eyebrowHtml(text) {
+  return text
+    ? `<p style="font-size:0.45em;text-transform:uppercase;letter-spacing:.15em;opacity:0.55;margin:0 0 0.4em">${esc(text)}</p>`
     : '';
+}
+
+function renderSlide(slide, index) {
+  const ey = eyebrowHtml(slide.eyebrow);
 
   switch (slide.type) {
 
     case 'hook':
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <p class="slide-body">${esc(slide.body)}</p>
-        <div class="qr-block">
-          <div class="qr-wrap" id="qr-code-el"></div>
-          <div class="qr-info">
-            <span class="qr-cta">Students: scan to follow along</span>
-            <span class="qr-sub">Open on your phone — no install needed</span>
-            <span class="qr-url" id="qr-url-text"></span>
-          </div>
-        </div>
+        ${ey}
+        <h2 class="r-fit-text">${nl(slide.headline)}</h2>
+        <p>${nl(slide.body)}</p>
+        <p style="font-size:0.4em;opacity:0.4;margin-top:1.5em">${location.hostname + location.pathname}</p>
       `;
 
     case 'comparison': {
-      const col = (side, cls) => `
-        <div class="cmp-col ${cls}">
-          <div class="cmp-label">${esc(side.label)}</div>
-          <div class="cmp-desc">${esc(side.desc)}</div>
-          <ul class="cmp-list">
-            ${side.items.map(item => `<li>${esc(item)}</li>`).join('')}
-          </ul>
-          <div class="cmp-note">${esc(side.note)}</div>
+      const col = side => `
+        <div style="border-top:2px solid rgba(255,255,255,0.25);padding-top:0.75em">
+          <h3>${esc(side.label)}</h3>
+          <p style="font-size:0.65em;opacity:0.8">${esc(side.desc)}</p>
+          <ul style="font-size:0.65em">${side.items.map(i => `<li>${esc(i)}</li>`).join('')}</ul>
+          <p style="font-size:0.55em;opacity:0.55;margin-top:0.5em"><em>${esc(side.note)}</em></p>
         </div>
       `;
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <div class="cmp-grid">
-          ${col(slide.left, 'cmp-left')}
-          <div class="cmp-divider"></div>
-          ${col(slide.right, 'cmp-right')}
-        </div>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2em;margin-top:0.5em">${col(slide.left)}${col(slide.right)}</div>
       `;
     }
 
     case 'contrast': {
       const pairs = slide.pairs.map(p => `
-        <div class="contrast-pair">
-          <div class="contrast-pair-label">${esc(p.label)}</div>
-          <div class="contrast-row">
-            <div class="contrast-side weak">
-              <div class="contrast-badge">vague</div>
-              <div class="contrast-text">${esc(p.weak)}</div>
-            </div>
-            <div class="contrast-arrow">→</div>
-            <div class="contrast-side strong">
-              <div class="contrast-badge">specific</div>
-              <div class="contrast-text">${esc(p.strong)}</div>
-            </div>
+        <div style="margin-bottom:0.75em">
+          <p style="font-size:0.55em;opacity:0.55;margin-bottom:0.3em;text-transform:uppercase;letter-spacing:.05em">${esc(p.label)}</p>
+          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0.75em;align-items:center;font-size:0.7em">
+            <div style="padding:0.5em 0.75em;border:1px solid rgba(255,255,255,0.2);border-radius:4px;opacity:0.55">${esc(p.weak)}</div>
+            <span style="opacity:0.4">→</span>
+            <div style="padding:0.5em 0.75em;border:1px solid rgba(255,255,255,0.6);border-radius:4px">${esc(p.strong)}</div>
           </div>
-          <div class="contrast-note">${esc(p.note)}</div>
+          <p style="font-size:0.55em;opacity:0.5;margin-top:0.3em"><em>${esc(p.note)}</em></p>
         </div>
       `).join('');
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <div class="contrast-pairs">${pairs}</div>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <div style="margin-top:0.5em">${pairs}</div>
       `;
     }
 
-    case 'camera': {
-      const cues = slide.cues.map(c =>
-        `<div class="camera-cue">${esc(c)}</div>`
-      ).join('');
+    case 'camera':
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <p class="slide-body">${esc(slide.body)}</p>
-        <div class="camera-cues">${cues}</div>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <p>${esc(slide.body)}</p>
+        <ul style="font-size:0.75em">${slide.cues.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
       `;
-    }
 
     case 'zoom': {
-      const levels = slide.levels.map((lv, i) => {
-        const connector = i < slide.levels.length - 1
-          ? `<div class="zoom-slide-connector">↓</div>`
-          : '';
-        return `
-          <div class="zoom-slide-lvl zoom-slide-lvl-${i + 1}">
-            <div class="zoom-slide-tag">${esc(lv.label)}</div>
-            <div class="zoom-slide-sublabel">${esc(lv.sublabel)}</div>
-            <div class="zoom-slide-example">${esc(lv.example)}</div>
-            <div class="zoom-slide-note">${esc(lv.note)}</div>
+      const levels = slide.levels.map((lv, i) => `
+        <div style="display:flex;gap:1em;align-items:flex-start">
+          <div style="background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.15);border-radius:4px;padding:0.5em 0.75em;flex:1">
+            <strong style="font-size:0.8em;opacity:0.7;text-transform:uppercase;letter-spacing:.05em">${esc(lv.label)}</strong>
+            <p style="font-size:0.75em;opacity:0.65;margin:0.1em 0">${esc(lv.sublabel)}</p>
+            <p style="font-size:0.85em;margin:0.2em 0">${esc(lv.example)}</p>
+            ${lv.note ? `<p style="font-size:0.65em;opacity:0.5;margin-top:0.2em"><em>${esc(lv.note)}</em></p>` : ''}
           </div>
-          ${connector}
-        `;
-      }).join('');
+        </div>
+        ${i < slide.levels.length - 1 ? '<p style="font-size:0.7em;opacity:0.35;margin:0.2em 0 0.2em 0.5em">↓ zoom in</p>' : ''}
+      `).join('');
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <div class="zoom-slide-diagram">${levels}</div>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <div style="display:flex;flex-direction:column;gap:0.25em;margin-top:0.5em;font-size:0.75em">${levels}</div>
       `;
     }
 
     case 'casestudy': {
       const listenBtn = slide.songId
-        ? `<button class="song-link listen-btn" data-song="${slide.songId}">Listen to this song ↗</button>`
+        ? `<p style="margin-top:1em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.4);color:inherit;cursor:pointer;padding:0.4em 1em;border-radius:3px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
       return `
-        ${eyebrow}
-        <h1 class="slide-headline">${esc(slide.headline)}</h1>
-        <p class="slide-subhead">${esc(slide.subhead)}</p>
-        <p class="slide-body">${esc(slide.body)}</p>
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <h3>${esc(slide.subhead)}</h3>
+        <p style="font-size:0.7em">${nl(slide.body)}</p>
         ${listenBtn}
       `;
     }
 
     case 'thesis': {
-      const [line1, line2] = slide.headline.split('\n');
+      const [line1, ...rest] = slide.headline.split('\n');
+      const line2 = rest.join('\n');
       return `
-        ${eyebrow}
-        <div class="thesis-wrap">
-          <span class="thesis-line muted">${esc(line1)}</span>
-          <span class="thesis-line lit">${esc(line2)}</span>
-          <span class="thesis-cue">${esc(slide.cue)}</span>
-        </div>
+        ${ey}
+        <h2 style="opacity:0.35">${esc(line1)}</h2>
+        <h2>${esc(line2)}</h2>
+        <p style="font-size:0.5em;opacity:0.55;margin-top:1em">${esc(slide.cue)}</p>
       `;
     }
 
-    case 'playlist':
-      return renderPlaylistSlide(slide, eyebrow);
+    case 'playlist': {
+      const groups = PLAYLIST_GROUPS.map(g => {
+        const items = g.songs.map(sid => {
+          const song = SONGS[sid];
+          if (!song) return '';
+          return `<li><button class="song-link" data-song="${sid}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;text-align:left">${esc(song.title)} <span style="opacity:0.6">— ${esc(song.artist)} · ${esc(song.year)}</span> ↗</button></li>`;
+        }).join('');
+        return `<p style="font-size:0.5em;text-transform:uppercase;letter-spacing:.1em;opacity:0.5;margin:0.75em 0 0.25em">${esc(g.label)}</p><ul style="font-size:0.65em;margin:0">${items}</ul>`;
+      }).join('');
+      return `
+        ${ey}
+        <h2>${nl(slide.headline)}</h2>
+        <div style="margin-top:0.25em">${groups}</div>
+      `;
+    }
 
     default:
-      return `<p class="slide-body">Slide ${index + 1}</p>`;
+      return `<p>Slide ${index + 1}</p>`;
   }
-}
-
-function renderPlaylistSlide(slide, eyebrow) {
-  const groups = PLAYLIST_GROUPS.map(g => {
-    const items = g.songs.map(sid => {
-      const song = SONGS[sid];
-      if (!song) return '';
-      return `
-        <button class="song-link playlist-row" data-song="${sid}">
-          <span class="pl-title">${esc(song.title)}</span>
-          <span class="pl-meta">${esc(song.artist)} · ${song.year}</span>
-          <span class="pl-arrow">↗</span>
-        </button>
-      `;
-    }).join('');
-    return `
-      <div class="pl-group">
-        <div class="pl-group-label">${esc(g.label)}</div>
-        ${items}
-      </div>
-    `;
-  }).join('');
-
-  return `
-    ${eyebrow}
-    <h1 class="slide-headline" style="margin-bottom:1.25rem">${esc(slide.headline)}</h1>
-    <div class="pl-grid">${groups}</div>
-  `;
 }
 
 // ─── QR Code ──────────────────────────────────────────────────────────────────
