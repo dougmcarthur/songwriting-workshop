@@ -176,8 +176,9 @@ function init() {
   buildSlides();
   Reveal.initialize({
     hash: true,
-    width: '90%',
-    height: '90%',
+    width: 1280,
+    height: 900,
+    margin: 0.06,
     center: true,
   });
   document.addEventListener('click', e => {
