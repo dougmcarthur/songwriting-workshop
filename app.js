@@ -211,26 +211,26 @@ const SLIDES = [
 ];
 
 const ZONES = [
-  { id:'v1',  label:'V1',     sublabel:'Verse 1',   type:'verse'  },
-  { id:'pch', label:'Pre-Ch', sublabel:'Pre-Chorus', type:'chorus' },
-  { id:'ch1', label:'Ch 1',   sublabel:'Chorus 1',   type:'chorus' },
-  { id:'v2',  label:'V2',     sublabel:'Verse 2',    type:'verse'  },
-  { id:'ch2', label:'Ch 2',   sublabel:'Chorus 2',   type:'chorus' },
-  { id:'br',  label:'Bridge', sublabel:'',           type:'bridge' },
-  { id:'out', label:'Outro',  sublabel:'',           type:'outro'  },
+  { id:'v1',  label:'V1',     type:'verse'  },
+  { id:'pch', label:'Pre-Ch', type:'chorus' },
+  { id:'ch1', label:'C1',     type:'chorus' },
+  { id:'v2',  label:'V2',     type:'verse'  },
+  { id:'ch2', label:'C2',     type:'chorus' },
+  { id:'br',  label:'Bridge', type:'bridge' },
+  { id:'out', label:'Outro',  type:'outro'  },
 ];
 
 const CARDS = [
-  'I used to believe in something',
-  'The drive home after the fight',
-  '3am, can\'t sleep again',
+  'The town we both swore we\'d leave',
+  'Your boots still sitting by the door',
+  '3am and I still can\'t sleep',
+  'Something\'s gotta give',
+  'We were gonna be alright',
+  'Please don\'t take what\'s mine',
+  'I did this to myself',
   'Everything I thought I knew',
-  'But maybe we could try',
-  'The version of you I invented',
-  'Standing in the parking lot',
-  'I should have said it then',
-  'Nothing left to prove',
-  'Same song, different words',
+  'But I still believe it',
+  'Same road, new kind of lost',
 ];
 
 // ─── State ───────────────────────────────────────────────────────────────────
@@ -614,29 +614,30 @@ function buildActivity(section) {
     <div class="activity-header">
       <div>
         <div class="activity-title">Build Your Skeleton</div>
-        <div class="activity-sub">Drag phrase cards into the structure. No right answer.</div>
+        <div class="activity-sub">Drag a phrase into each section. No wrong answer.</div>
       </div>
       <button class="reset-btn" id="reset-btn">Reset</button>
     </div>
-    <div class="zones-scroll" id="zones-scroll">
-      ${ZONES.map(z => `
-        <div class="drop-zone" id="zone-${z.id}" data-zone="${z.id}">
-          <div class="zone-label-col type-${z.type}">
-            <div class="zone-label">${esc(z.label)}</div>
-            ${z.sublabel ? `<div class="zone-sublabel">${esc(z.sublabel)}</div>` : ''}
-          </div>
-          <div class="zone-content" data-zone-content="${z.id}">
-            <div class="zone-placeholder">drop a card here</div>
-          </div>
+    <div class="activity-body">
+      <div class="pool-col">
+        <div class="pool-heading">Phrase Cards</div>
+        <div class="card-pool" id="card-pool">
+          ${CARDS.map((text, i) =>
+            `<div class="card" data-card="${i}" draggable="false">${esc(text)}</div>`
+          ).join('')}
         </div>
-      `).join('')}
-    </div>
-    <div class="pool-wrap">
-      <div class="pool-label">Your Cards — drag to place</div>
-      <div class="card-pool" id="card-pool">
-        ${CARDS.map((text, i) =>
-          `<div class="card" data-card="${i}" draggable="false">${esc(text)}</div>`
-        ).join('')}
+      </div>
+      <div class="zones-col">
+        ${ZONES.map(z => `
+          <div class="drop-zone" id="zone-${z.id}" data-zone="${z.id}">
+            <div class="zone-label-col type-${z.type}">
+              <div class="zone-label">${esc(z.label)}</div>
+            </div>
+            <div class="zone-content" data-zone-content="${z.id}">
+              <div class="zone-placeholder">drag a card here</div>
+            </div>
+          </div>
+        `).join('')}
       </div>
     </div>
   `;
@@ -683,9 +684,10 @@ function onPD(e) {
   const rect = card.getBoundingClientRect();
   const ghost = el('div', 'drag-ghost');
   ghost.textContent = card.textContent;
-  ghost.style.left  = rect.left + 'px';
-  ghost.style.top   = rect.top  + 'px';
-  ghost.style.width = rect.width + 'px';
+  ghost.style.left     = rect.left + 'px';
+  ghost.style.top      = rect.top  + 'px';
+  ghost.style.width    = rect.width + 'px';
+  ghost.style.fontSize = window.getComputedStyle(card).fontSize;
   document.body.appendChild(ghost);
 
   card.classList.add('is-dragging');

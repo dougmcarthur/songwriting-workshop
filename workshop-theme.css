@@ -353,7 +353,7 @@ body,
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 10px;
+  margin-bottom: 12px;
   flex-shrink: 0;
 }
 
@@ -365,8 +365,8 @@ body,
 }
 
 .activity-sub {
-  font-size: 0.72em;
-  opacity: 0.5;
+  font-size: 0.7em;
+  opacity: 0.48;
   margin-top: 2px;
 }
 
@@ -380,96 +380,105 @@ body,
   border-radius: 6px;
   cursor: pointer;
   transition: background 0.15s;
+  flex-shrink: 0;
 }
 .reset-btn:hover { background: rgba(255,255,255,0.13); }
 
-.zones-scroll {
+/* Two-column body: cards left, structure right */
+.activity-body {
   flex: 1;
-  overflow-y: auto;
-  overscroll-behavior: contain;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 18px;
+  min-height: 0;
+}
+
+/* Left column: phrase card pool */
+.pool-col {
   display: flex;
   flex-direction: column;
-  gap: 5px;
-  padding-right: 4px;
+  min-height: 0;
+}
+
+.pool-heading {
+  font-size: 0.58em;
+  opacity: 0.38;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+  margin-bottom: 9px;
+  flex-shrink: 0;
+}
+
+.card-pool {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 7px;
+  overflow-y: auto;
+}
+
+/* Right column: drop zones stacked to fill height */
+.zones-col {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-height: 0;
 }
 
 .drop-zone {
   display: flex;
   align-items: stretch;
   border: 1px solid rgba(255,255,255,0.1);
-  border-radius: 8px;
+  border-radius: 7px;
   overflow: hidden;
-  min-height: 50px;
+  flex: 1;
+  min-height: 0;
   transition: border-color 0.15s, background 0.15s;
 }
 
 .drop-zone.drag-over {
-  border-color: rgba(255,255,255,0.4);
+  border-color: rgba(255,255,255,0.42);
   background: rgba(255,255,255,0.04);
 }
 
+/* Zone label — always visible, even when a card is placed */
 .zone-label-col {
-  width: 76px;
+  width: 68px;
   flex-shrink: 0;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 8px 4px;
+  padding: 6px 4px;
 }
 
-.zone-label-col.type-verse  { background: rgba(123,167,212,0.2); }
-.zone-label-col.type-chorus { background: rgba(200,168,74,0.2); }
-.zone-label-col.type-bridge { background: rgba(212,123,170,0.2); }
+.zone-label-col.type-verse  { background: rgba(123,167,212,0.22); }
+.zone-label-col.type-chorus { background: rgba(200,168,74,0.22);  }
+.zone-label-col.type-bridge { background: rgba(212,123,170,0.22); }
 .zone-label-col.type-outro  { background: rgba(140,140,140,0.12); }
 
 .zone-label {
   font-family: var(--font-head);
   font-weight: 700;
-  font-size: 0.72em;
+  font-size: 0.78em;
   letter-spacing: -0.01em;
-}
-
-.zone-sublabel {
-  font-size: 0.52em;
-  opacity: 0.55;
-  margin-top: 2px;
 }
 
 .zone-content {
   flex: 1;
-  padding: 8px 10px;
+  padding: 6px 12px;
   display: flex;
   align-items: center;
   min-width: 0;
 }
 
 .zone-placeholder {
-  font-size: 0.68em;
-  opacity: 0.28;
+  font-size: 0.65em;
+  opacity: 0.25;
   font-style: italic;
   pointer-events: none;
 }
 
-.pool-wrap {
-  flex-shrink: 0;
-  margin-top: 10px;
-}
-
-.pool-label {
-  font-size: 0.62em;
-  opacity: 0.4;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  margin-bottom: 6px;
-}
-
-.card-pool {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
+/* Draggable phrase cards */
 .card {
   background: rgba(255,255,255,0.07);
   border: 1px solid rgba(255,255,255,0.14);
@@ -495,11 +504,11 @@ body,
   border: 1px solid rgba(255,255,255,0.38);
   border-radius: 6px;
   padding: 6px 11px;
-  font-size: 0.68em;
   font-family: var(--font-body);
   color: #e8e8e8;
   box-shadow: 0 4px 14px rgba(0,0,0,0.45);
   line-height: 1.4;
+  white-space: nowrap;
 }
 
 /* ─── W2 Activity: Zoom-In Map ───────────────────────────────────────────────── */
