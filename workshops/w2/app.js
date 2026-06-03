@@ -318,7 +318,7 @@ function renderSlide(slide, index) {
 
     case 'casestudy': {
       const listenBtn = slide.songId
-        ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.35);color:inherit;cursor:pointer;padding:0.35em 1em;border-radius:4px;font-size:0.6em;font-family:inherit">Listen to this song ↗</button></p>`
+        ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
       return `
         ${ey}
@@ -345,7 +345,11 @@ function renderSlide(slide, index) {
         const items = g.songs.map(sid => {
           const song = SONGS[sid];
           if (!song) return '';
-          return `<li><button class="song-link" data-song="${sid}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;text-align:left">${esc(song.title)} <span style="opacity:0.6">— ${esc(song.artist)} · ${esc(song.year)}</span> ↗</button></li>`;
+          return `
+            <li style="margin-bottom:0.55em">
+              <button class="song-link" data-song="${sid}" style="display:block;font-weight:600;line-height:1.3">${esc(song.title)} ↗</button>
+              <span style="display:block;font-size:0.75em;text-transform:uppercase;letter-spacing:0.07em;opacity:0.42;margin-top:0.15em">${esc(song.artist)} · ${esc(song.year)}</span>
+            </li>`;
         }).join('');
         return `<p style="font-size:0.5em;text-transform:uppercase;letter-spacing:.1em;opacity:0.5;margin:0.75em 0 0.25em">${esc(g.label)}</p><ul style="font-size:0.65em;margin:0">${items}</ul>`;
       }).join('');

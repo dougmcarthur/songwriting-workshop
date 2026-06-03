@@ -348,13 +348,13 @@ function renderSlide(slide, index) {
           `<span style="background:${blockColor[b]||'#888'};color:#000;padding:2px 6px;border-radius:2px;font-size:0.7em;font-weight:700">${b==='v'?'V':b==='c'?'C':'B'}</span>`
         ).join('');
         const songEl = era.songId
-          ? `<button class="song-link" data-song="${era.songId}" style="font-size:inherit;background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0">${esc(era.song)}</button>`
-          : esc(era.song);
+          ? `<button class="song-link" data-song="${era.songId}">${esc(era.song)}</button>`
+          : `<span>${esc(era.song)}</span>`;
         return `
           <div style="border-top:2px solid rgba(255,255,255,0.15);padding-top:0.75em;text-align:center">
-            <p style="opacity:0.5;font-size:0.75em;margin-bottom:0.2em">${esc(era.year)}</p>
-            <p style="font-weight:600;margin-bottom:0.2em">${esc(era.artist)}</p>
-            <p style="font-size:0.85em;margin-bottom:0.55em">${songEl}</p>
+            <p style="opacity:0.45;font-size:0.7em;margin-bottom:0.35em">${esc(era.year)}</p>
+            <p style="font-size:0.95em;font-weight:700;margin-bottom:0.2em">${songEl}</p>
+            <p style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;opacity:0.45;margin-bottom:0.55em">${esc(era.artist)}</p>
             <div style="display:flex;gap:3px;flex-wrap:wrap;justify-content:center">${mini}</div>
           </div>
         `;
@@ -369,7 +369,7 @@ function renderSlide(slide, index) {
     case 'table': {
       const rows = slide.rows.map(r => {
         const exampleCell = r.songId
-          ? `<button class="song-link" data-song="${r.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;text-align:left">${esc(r.example)}</button>`
+          ? `<button class="song-link" data-song="${r.songId}">${esc(r.example)}</button>`
           : esc(r.example);
         return `<tr><td style="font-weight:600">${esc(r.name)}</td><td style="opacity:0.75">${esc(r.desc)}</td><td>${exampleCell}</td></tr>`;
       }).join('');
@@ -392,7 +392,7 @@ function renderSlide(slide, index) {
       const cards = slide.evidence.map((e, i) => {
         const pal = CARD_PALETTES[i % CARD_PALETTES.length];
         const titleEl = e.songId
-          ? `<button class="song-link" data-song="${e.songId}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font:inherit;font-weight:700;display:block;text-align:left;width:100%">${esc(e.title)}</button>`
+          ? `<button class="song-link" data-song="${e.songId}" style="font-weight:700;display:block;width:100%">${esc(e.title)}</button>`
           : `<strong>${esc(e.title)}</strong>`;
         return `
           <div class="evidence-card">
@@ -430,7 +430,7 @@ function renderSlide(slide, index) {
 
     case 'casestudy': {
       const listenBtn = slide.songId
-        ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="background:none;border:1px solid rgba(255,255,255,0.35);color:inherit;cursor:pointer;padding:0.35em 1em;border-radius:4px;font-size:0.6em;font-family:inherit">Listen to this song ↗</button></p>`
+        ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
       return `
         ${ey}
@@ -457,7 +457,11 @@ function renderSlide(slide, index) {
         const items = g.songs.map(sid => {
           const song = SONGS[sid];
           if (!song) return '';
-          return `<li><button class="song-link" data-song="${sid}" style="background:none;border:none;color:inherit;cursor:pointer;text-decoration:underline;padding:0;font-size:inherit;text-align:left">${esc(song.title)} <span style="opacity:0.6">— ${esc(song.artist)} · ${esc(song.year)}</span> ↗</button></li>`;
+          return `
+            <li style="margin-bottom:0.55em">
+              <button class="song-link" data-song="${sid}" style="display:block;font-weight:600;line-height:1.3">${esc(song.title)} ↗</button>
+              <span style="display:block;font-size:0.75em;text-transform:uppercase;letter-spacing:0.07em;opacity:0.42;margin-top:0.15em">${esc(song.artist)} · ${esc(song.year)}</span>
+            </li>`;
         }).join('');
         return `<p style="font-size:0.5em;text-transform:uppercase;letter-spacing:.1em;opacity:0.5;margin:0.75em 0 0.25em">${esc(g.label)}</p><ul style="font-size:0.65em;margin:0">${items}</ul>`;
       }).join('');

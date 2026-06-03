@@ -72,6 +72,22 @@ body,
   background: rgba(255,255,255,0.08);
 }
 
+/* ─── Song link base ─────────────────────────────────────────────────────────── */
+/* Shared reset for all inline song-title buttons */
+.song-link {
+  background: none;
+  border: none;
+  color: inherit;
+  cursor: pointer;
+  padding: 0;
+  font: inherit;
+  text-decoration: none;
+  text-align: inherit;
+}
+.song-link:hover {
+  opacity: 0.8;
+}
+
 /* ─── Evidence cards ─────────────────────────────────────────────────────────── */
 .evidence-grid {
   display: grid;
