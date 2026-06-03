@@ -456,22 +456,18 @@ function renderSlide(slide, index) {
 
     case 'playlist': {
       let num = 0;
-      const rows = PLAYLIST_GROUPS.map(g => {
-        const groupRow = `<tr class="pl-group-row"><td class="col-num"></td><td colspan="3">${esc(g.label)}</td></tr>`;
-        const songRows = g.songs.map(sid => {
-          const song = SONGS[sid];
-          if (!song) return '';
-          num++;
-          return `
-            <tr class="pl-song-row">
-              <td class="col-num">${num}</td>
-              <td class="pl-title"><button class="song-link" data-song="${sid}">${esc(song.title)}</button></td>
-              <td class="pl-artist">${esc(song.artist)}</td>
-              <td class="col-year">${esc(song.year)}</td>
-            </tr>
-          `;
-        }).join('');
-        return groupRow + songRows;
+      const rows = PLAYLIST_GROUPS.flatMap(g => g.songs).map(sid => {
+        const song = SONGS[sid];
+        if (!song) return '';
+        num++;
+        return `
+          <tr class="pl-song-row">
+            <td class="col-num">${num}</td>
+            <td class="pl-title"><button class="song-link" data-song="${sid}">${esc(song.title)}</button></td>
+            <td class="pl-artist">${esc(song.artist)}</td>
+            <td class="col-year">${esc(song.year)}</td>
+          </tr>
+        `;
       }).join('');
       return `
         ${ey}
