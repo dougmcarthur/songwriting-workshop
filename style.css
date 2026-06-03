@@ -1539,6 +1539,8 @@ body {
 html, body { overflow: hidden; }
 
 .reveal {
+  position: fixed !important;
+  inset: 0;
   background: var(--bg);
   color: var(--text);
   font-family: var(--font-u);
