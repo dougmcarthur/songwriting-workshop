@@ -177,7 +177,7 @@ function init() {
   Reveal.initialize({
     hash: true,
     width: 1280,
-    height: 720,
+    height: 900,
     center: true,
   });
   document.addEventListener('click', e => {
