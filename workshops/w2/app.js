@@ -163,6 +163,7 @@ const SLIDES = [
     eyebrow: 'Workshop 2 Playlist',
     headline: 'Songs studied\ntoday.',
   },
+  { id: 'activity', type: 'activity' },
 ];
 
 // ─── State ────────────────────────────────────────────────────────────────────
@@ -173,34 +174,30 @@ const state = { placements: {} };
 
 function init() {
   buildSlides();
-  setupControls();
-  setupPanels();
-  requestAnimationFrame(() => {
-    Reveal.initialize({
-      controls: true,
-      controlsTutorial: false,
-      controlsLayout: 'bottom-right',
-      progress: true,
-      slideNumber: false,
-      hash: true,
-      history: true,
-      keyboard: true,
-      overview: true,
-      center: false,
-      touch: true,
-      transition: 'slide',
-      transitionSpeed: 'fast',
-      backgroundTransition: 'none',
-      width: window.innerWidth,
-      height: window.innerHeight,
-      margin: 0,
-      minScale: 1,
-      maxScale: 1,
-    }).then(() => {
-      generateQR();
-    });
-    window.addEventListener('resize', () => Reveal.layout());
+  Reveal.initialize({
+    controls: true,
+    controlsTutorial: false,
+    controlsLayout: 'bottom-right',
+    progress: true,
+    slideNumber: false,
+    hash: true,
+    history: true,
+    keyboard: true,
+    overview: true,
+    center: false,
+    touch: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'none',
+    width: 1280,
+    height: 720,
+    margin: 0.04,
+  }).then(() => {
+    generateQR();
   });
+  window.addEventListener('resize', () => Reveal.layout());
+  setupControls();
+  setupActivity();
   document.addEventListener('click', e => {
     const btn = e.target.closest('.song-link');
     if (btn) { openSongOverlay(btn.dataset.song); return; }
@@ -209,7 +206,6 @@ function init() {
   document.addEventListener('keydown', e => {
     if (e.key === 'Escape') {
       if (document.querySelector('.song-overlay')) { closeSongOverlay(); e.stopImmediatePropagation(); return; }
-      if (state.panel) { closePanel(); e.stopImmediatePropagation(); return; }
     }
   });
 }
@@ -220,10 +216,14 @@ function buildSlides() {
   const container = document.getElementById('slides-container');
   SLIDES.forEach((slide, i) => {
     const section = document.createElement('section');
-    const inner = document.createElement('div');
-    inner.className = 'slide-inner';
-    inner.innerHTML = renderSlide(slide, i);
-    section.appendChild(inner);
+    if (slide.type === 'activity') {
+      buildActivity(section);
+    } else {
+      const inner = document.createElement('div');
+      inner.className = 'slide-inner';
+      inner.innerHTML = renderSlide(slide, i);
+      section.appendChild(inner);
+    }
     container.appendChild(section);
   });
 }
@@ -245,43 +245,12 @@ function toggleFullscreen() {
   else document.exitFullscreen?.();
 }
 
-// ─── Panels ───────────────────────────────────────────────────────────────────
+// ─── Activity ─────────────────────────────────────────────────────────────────
 
-function setupPanels() {
-  document.getElementById('btn-outline')?.addEventListener('click', () => togglePanel('outline'));
-  document.getElementById('btn-activity')?.addEventListener('click', () => togglePanel('activity'));
-  document.getElementById('panel-backdrop')?.addEventListener('click', closePanel);
-  document.querySelectorAll('.side-panel-close').forEach(b => b.addEventListener('click', closePanel));
-}
-
-function togglePanel(id) {
-  if (state.panel === id) { closePanel(); return; }
-  closePanel();
-  state.panel = id;
-  const panel = document.getElementById('panel-' + id);
-  if (!panel) return;
-  if (id === 'outline' && !panel.dataset.built) {
-    buildHandout(document.getElementById('outline-body'));
-    panel.dataset.built = '1';
-  }
-  if (id === 'activity' && !panel.dataset.built) {
-    buildActivity(document.getElementById('activity-body'));
-    panel.dataset.built = '1';
-  }
-  panel.classList.add('open');
-  panel.setAttribute('aria-hidden', 'false');
-  document.getElementById('panel-backdrop')?.classList.add('visible');
-  document.getElementById('btn-' + id)?.classList.add('active');
-}
-
-function closePanel() {
-  if (state.panel) {
-    document.getElementById('panel-' + state.panel)?.classList.remove('open');
-    document.getElementById('panel-' + state.panel)?.setAttribute('aria-hidden', 'true');
-    document.getElementById('btn-' + state.panel)?.classList.remove('active');
-  }
-  document.getElementById('panel-backdrop')?.classList.remove('visible');
-  state.panel = null;
+function setupActivity() {
+  document.getElementById('btn-activity')?.addEventListener('click', () => {
+    Reveal.slide(SLIDES.length - 1);
+  });
 }
 
 // ─── Slide renderers ──────────────────────────────────────────────────────────
@@ -540,109 +509,6 @@ function closeSongOverlay() {
   existing.addEventListener('transitionend', () => existing.remove(), { once: true });
 }
 
-// ─── Handout ──────────────────────────────────────────────────────────────────
-
-function buildHandout(panel) {
-  const wrap = el('div', 'handout');
-
-  function slinkH(songId, label) {
-    return `<button class="song-link" data-song="${songId}">${label}</button>`;
-  }
-
-  const sections = [
-    {
-      label: 'The Core Distinction',
-      title: 'Topic vs. Subject',
-      rawBody:
-        '<strong>Topic</strong> — what the song is about. Heartbreak. Home. Loss.<br><br>' +
-        '<strong>Subject</strong> — what the song is <em>really</em> about. The specific, ' +
-        'personal thing only you can write.<br><br>' +
-        'Topic is the genre. Subject is the song.',
-    },
-    {
-      label: 'The Test',
-      title: 'Vague is forgettable. Specific is unforgettable.',
-      body:
-        '"I miss you every day" is a topic.\n"I still reach for my phone to tell you something I just saw" is a subject.\n\n' +
-        'The second one works because it\'s one person\'s specific reflex — and everyone recognises it.',
-    },
-    {
-      label: 'The Technique',
-      title: 'Keep zooming until you can film it.',
-      body:
-        'Can you point a camera at this?\nCan you show it without explanation?\n\n' +
-        'If not — zoom in.\n\n' +
-        'Theme → Your Angle → The Scene.\n\n' +
-        'You\'re done when you have a scene.',
-    },
-    {
-      label: 'Case Study',
-      title: '"The River" — Bruce Springsteen',
-      rawBody:
-        'Verse 1: graduation ceremony, union card, pregnant girlfriend, borrowed wedding ring. ' +
-        'Every detail is specific. None of it is vague.<br><br>' +
-        'Topic: regret, lost youth. Subject: <em>this</em> couple, <em>this</em> river, ' +
-        '<em>this</em> specific fading hope.<br><br>' +
-        slinkH('the-river', 'Listen to The River ↗'),
-    },
-    {
-      label: 'The Point',
-      title: 'The more specific you are, the more universal it becomes.',
-      body:
-        'You don\'t make a song relatable by being general.\n' +
-        'You make it relatable by being so particular\n' +
-        'that people recognise something they didn\'t know they felt.\n\n' +
-        '→ Switch to the Activity tab when your instructor says go.',
-    },
-  ];
-
-  sections.forEach(s => {
-    const sec = el('div', 'handout-section');
-    sec.innerHTML = `<div class="h-label">${esc(s.label)}</div>
-                     <div class="h-title">${esc(s.title)}</div>`;
-
-    if (s.rawBody) {
-      const p = el('div', 'h-body');
-      p.innerHTML = s.rawBody;
-      sec.appendChild(p);
-    } else if (s.body) {
-      const p = el('div', 'h-body');
-      p.textContent = s.body;
-      sec.appendChild(p);
-    }
-
-    wrap.appendChild(sec);
-  });
-
-  // ── Playlist ──────────────────────────────────────────────────
-  const playlistSec = el('div', 'handout-section');
-  playlistSec.innerHTML = `<div class="h-label">Workshop 2 Playlist</div>
-                            <div class="h-title">Every song from today's session.</div>`;
-
-  PLAYLIST_GROUPS.forEach(g => {
-    const groupEl = el('div', 'h-pl-group');
-    groupEl.innerHTML = `<div class="h-pl-group-label">${esc(g.label)}</div>`;
-
-    g.songs.forEach(sid => {
-      const song = SONGS[sid];
-      if (!song) return;
-      const btn = el('button', 'song-link h-pl-row');
-      btn.dataset.song = sid;
-      btn.innerHTML = `
-        <span class="h-pl-title">${esc(song.title)}</span>
-        <span class="h-pl-artist">${esc(song.artist)} · ${song.year}</span>
-        <span class="h-pl-arrow">↗</span>
-      `;
-      groupEl.appendChild(btn);
-    });
-
-    playlistSec.appendChild(groupEl);
-  });
-
-  wrap.appendChild(playlistSec);
-  panel.appendChild(wrap);
-}
-
 // ═══════════════════════════════════════════════════════════════
 //  ACTIVITY — The Zoom-In Map
 // ═══════════════════════════════════════════════════════════════
@@ -680,7 +546,7 @@ const ZOOM_LEVELS = [
   },
 ];
 
-function buildActivity(container) {
+function buildActivity(section) {
   const wrap = el('div', 'activity-view');
 
   const levels = ZOOM_LEVELS.map((lv, i) => {
@@ -733,7 +599,7 @@ function buildActivity(container) {
     </div>
   `;
 
-  container.appendChild(wrap);
+  section.appendChild(wrap);
   wrap.querySelector('#reset-btn').addEventListener('click', resetActivity);
 
   wrap.querySelectorAll('.seed-card').forEach(card => {
