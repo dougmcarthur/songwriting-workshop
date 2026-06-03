@@ -16,7 +16,7 @@ body,
 
 /* Breathing room on all slides */
 .reveal .slides section {
-  padding: 48px 68px;
+  padding: 24px 60px;
   box-sizing: border-box;
 }
 
@@ -394,6 +394,7 @@ body,
   flex: 1;
   display: grid;
   grid-template-columns: 2fr 3fr;
+  grid-template-rows: 1fr;
   gap: 18px;
   min-height: 0;
 }
@@ -403,6 +404,7 @@ body,
   display: flex;
   flex-direction: column;
   min-height: 0;
+  overflow: hidden;
 }
 
 .pool-heading {
