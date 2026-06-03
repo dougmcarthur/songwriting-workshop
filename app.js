@@ -250,13 +250,27 @@ function init() {
   document.addEventListener('click', e => {
     const btn = e.target.closest('.song-link');
     if (btn) { openSongOverlay(btn.dataset.song); return; }
-    if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) closeSongOverlay();
+    if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) {
+      closeSongOverlay(); closeHeroOverlay(); return;
+    }
+    const heroStop = e.target.closest('.hero-stop');
+    if (heroStop) { openHeroOverlay(parseInt(heroStop.dataset.hero, 10)); return; }
+    const heroPrev = e.target.closest('.hero-card-prev');
+    if (heroPrev) { navigateHeroOverlay(-1); return; }
+    const heroNext = e.target.closest('.hero-card-next');
+    if (heroNext) { navigateHeroOverlay(+1); return; }
     const copyBtn = e.target.closest('#playlist-copy-btn');
     if (copyBtn) { handlePlaylistCopy(copyBtn); return; }
   });
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && document.querySelector('.song-overlay')) {
-      closeSongOverlay(); e.stopImmediatePropagation();
+    if (e.key === 'Escape') {
+      if (document.querySelector('.song-overlay')) { closeSongOverlay(); e.stopImmediatePropagation(); }
+      if (document.querySelector('.hero-overlay')) { closeHeroOverlay(); e.stopImmediatePropagation(); }
+      return;
+    }
+    if ((e.key === 'Enter' || e.key === ' ') && e.target.classList.contains('hero-stop')) {
+      openHeroOverlay(parseInt(e.target.dataset.hero, 10));
+      e.preventDefault();
     }
   });
 }
@@ -417,16 +431,54 @@ function renderSlide(slide, index) {
     }
 
     case 'hero': {
-      const rows = slide.rows.map(r =>
-        `<tr><td>${esc(r.journey)}</td><td>${esc(r.song)}</td></tr>`
-      ).join('');
+      const POS = [
+        { x: 90,   y: 260 },
+        { x: 300,  y: 385 },
+        { x: 490,  y: 100 },
+        { x: 680,  y: 385 },
+        { x: 870,  y: 100 },
+        { x: 1070, y: 260 },
+      ];
+      const wrapLbl = t => {
+        const w = t.split(' ');
+        if (w.length <= 2) return [t];
+        const m = Math.ceil(w.length / 2);
+        return [w.slice(0, m).join(' '), w.slice(m).join(' ')];
+      };
+      const stopsSvg = slide.rows.map((r, i) => {
+        const { x, y } = POS[i];
+        const lines = wrapLbl(r.journey);
+        const linesHtml = lines.map((l, li) =>
+          `<tspan x="${x}" dy="${li ? '1.3em' : '0'}">${esc(l)}</tspan>`
+        ).join('');
+        return `<g class="hero-stop" data-hero="${i}" tabindex="0" role="button" aria-label="${esc(r.journey)}">
+          <circle cx="${x}" cy="${y}" r="44" fill="rgba(200,149,58,0.1)" stroke="rgba(200,149,58,0.45)" stroke-width="1.5"/>
+          <text x="${x}" y="${y}" dy="0.35em" text-anchor="middle" fill="rgba(255,255,255,0.9)" font-family="Poppins,sans-serif" font-weight="700" font-size="22">${i + 1}</text>
+          <text x="${x}" y="${y + 60}" text-anchor="middle" fill="rgba(255,255,255,0.5)" font-family="DM Sans,sans-serif" font-size="12.5" font-weight="500">${linesHtml}</text>
+        </g>`;
+      }).join('');
       return `
-        ${ey}
-        <h2>${nl(slide.headline)}</h2>
-        <table style="font-size:0.65em;margin-top:0.5em">
-          <thead><tr><th>Hero's Journey</th><th>Song Structure</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <div class="hero-slide">
+          ${ey}
+          <h2 style="margin-bottom:0.2em">${nl(slide.headline)}</h2>
+          <div class="hero-map-wrap">
+            <svg class="hero-map" viewBox="0 0 1160 500" xmlns="http://www.w3.org/2000/svg">
+              <g fill="rgba(255,255,255,0.035)" stroke="rgba(255,255,255,0.045)" stroke-width="1" stroke-linejoin="round">
+                <path d="M840,490 L885,375 L935,435 L1005,305 L1065,370 L1125,290 L1160,385 L1160,490Z"/>
+                <polygon points="550,490 524,455 576,455"/>
+                <polygon points="588,496 559,453 617,453"/>
+                <polygon points="626,490 597,453 655,453"/>
+              </g>
+              <g fill="none" stroke="rgba(255,255,255,0.04)" stroke-width="1.8" stroke-linecap="round">
+                <path d="M75,464 Q145,452 215,464 Q285,476 355,464"/>
+                <path d="M75,476 Q145,464 215,476 Q285,488 355,476"/>
+              </g>
+              <path d="M90,260 C185,260 200,385 300,385 C400,385 395,100 490,100 C585,100 580,385 680,385 C775,385 770,100 870,100 C965,100 970,260 1070,260"
+                    fill="none" stroke="rgba(200,149,58,0.5)" stroke-width="2.5" stroke-dasharray="10 7" stroke-linecap="round"/>
+              ${stopsSvg}
+            </svg>
+          </div>
+        </div>
       `;
     }
 
@@ -598,6 +650,61 @@ function closeSongOverlay() {
   if (!existing) return;
   existing.classList.remove('open');
   existing.addEventListener('transitionend', () => existing.remove(), { once: true });
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  HERO OVERLAY
+// ═══════════════════════════════════════════════════════════════
+
+function openHeroOverlay(index) {
+  const slide = SLIDES.find(s => s.type === 'hero');
+  if (!slide) return;
+  const total = slide.rows.length;
+  const row = slide.rows[index];
+  if (!row) return;
+
+  closeHeroOverlay();
+
+  const dots = slide.rows.map((_, i) =>
+    `<span class="hero-dot${i === index ? ' active' : ''}"></span>`
+  ).join('');
+
+  const wrap = el('div', 'hero-overlay');
+  wrap.dataset.heroIndex = index;
+  wrap.innerHTML = `
+    <div class="overlay-backdrop"></div>
+    <div class="hero-card" role="dialog" aria-modal="true" aria-label="${esc(row.journey)}">
+      <button class="overlay-close" aria-label="Close">✕</button>
+      <div class="hero-card-nav">
+        <button class="hero-card-prev" aria-label="Previous stage">←</button>
+        <span class="hero-card-num">${index + 1} / ${total}</span>
+        <button class="hero-card-next" aria-label="Next stage">→</button>
+      </div>
+      <div class="hero-card-journey">${esc(row.journey)}</div>
+      <div class="hero-card-divider">↓ in your song</div>
+      <div class="hero-card-song">${esc(row.song)}</div>
+      <div class="hero-dots">${dots}</div>
+    </div>
+  `;
+
+  document.body.appendChild(wrap);
+  requestAnimationFrame(() => wrap.classList.add('open'));
+}
+
+function closeHeroOverlay() {
+  const existing = document.querySelector('.hero-overlay');
+  if (!existing) return;
+  existing.classList.remove('open');
+  existing.addEventListener('transitionend', () => existing.remove(), { once: true });
+}
+
+function navigateHeroOverlay(delta) {
+  const overlay = document.querySelector('.hero-overlay');
+  if (!overlay) return;
+  const slide = SLIDES.find(s => s.type === 'hero');
+  if (!slide) return;
+  const current = parseInt(overlay.dataset.heroIndex, 10);
+  openHeroOverlay((current + delta + slide.rows.length) % slide.rows.length);
 }
 
 // ═══════════════════════════════════════════════════════════════

@@ -339,6 +339,154 @@ body,
   opacity: 0.52;
 }
 
+/* ─── Hero's Journey Map ─────────────────────────────────────────────────────── */
+.hero-slide {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  text-align: left;
+}
+
+.hero-map-wrap {
+  flex: 1;
+  min-height: 0;
+  display: flex;
+  align-items: center;
+  margin-top: 0.15em;
+}
+
+.hero-map {
+  width: 100%;
+  height: auto;
+  max-height: 100%;
+  overflow: visible;
+}
+
+.hero-stop {
+  cursor: pointer;
+}
+
+.hero-stop circle {
+  transition: fill 0.15s, stroke-opacity 0.15s, stroke-width 0.15s;
+}
+
+.hero-stop:hover circle,
+.hero-stop:focus-visible circle {
+  fill: rgba(200,149,58,0.24);
+  stroke: rgba(200,149,58,0.9);
+  stroke-width: 2;
+}
+
+.hero-stop:focus-visible { outline: none; }
+
+/* ─── Hero overlay ───────────────────────────────────────────────────────────── */
+.hero-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease;
+}
+
+.hero-overlay.open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.hero-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #1c1c24;
+  border: 1px solid rgba(200,149,58,0.28);
+  border-radius: 14px;
+  padding: 20px 28px 24px;
+  min-width: 300px;
+  max-width: 400px;
+  width: 90vw;
+  font-family: var(--font-body);
+  color: #fff;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.65);
+  text-align: center;
+}
+
+.hero-card-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.hero-card-prev,
+.hero-card-next {
+  background: none;
+  border: none;
+  color: rgba(255,255,255,0.38);
+  font-size: 1.05em;
+  cursor: pointer;
+  padding: 4px 10px;
+  border-radius: 5px;
+  transition: color 0.12s, background 0.12s;
+  line-height: 1;
+}
+.hero-card-prev:hover,
+.hero-card-next:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.07);
+}
+
+.hero-card-num {
+  font-size: 0.66em;
+  opacity: 0.35;
+  letter-spacing: 0.06em;
+}
+
+.hero-card-journey {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 1.35em;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: #c8953a;
+  margin-bottom: 0.5em;
+}
+
+.hero-card-divider {
+  font-size: 0.6em;
+  opacity: 0.35;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  margin-bottom: 0.55em;
+}
+
+.hero-card-song {
+  font-size: 0.88em;
+  line-height: 1.55;
+  opacity: 0.82;
+  margin-bottom: 1em;
+}
+
+.hero-dots {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+}
+
+.hero-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.16);
+}
+
+.hero-dot.active {
+  background: #c8953a;
+}
+
 /* ─── W1 Activity: Build Your Skeleton ──────────────────────────────────────── */
 .activity-view {
   width: 100%;
