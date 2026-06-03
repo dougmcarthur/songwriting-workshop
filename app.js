@@ -201,13 +201,13 @@ const SLIDES = [
     headline: 'Structure isn\'t the cage.\nIt\'s the launching pad.',
     cue: '→ Activity starts now.',
   },
+  { id: 'activity', type: 'activity' },
   {
     id: 'playlist',
     type: 'playlist',
     eyebrow: 'Workshop 1 Playlist',
     headline: 'Every song\nfrom today\'s session.',
   },
-  { id: 'activity', type: 'activity' },
 ];
 
 const ZONES = [

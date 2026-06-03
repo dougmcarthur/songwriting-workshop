@@ -420,6 +420,7 @@ body,
   align-content: flex-start;
   gap: 7px;
   overflow-y: auto;
+  overscroll-behavior: contain;
 }
 
 /* Right column: drop zones stacked to fill height */
@@ -466,6 +467,7 @@ body,
   opacity: 0.3;
   flex-shrink: 0;
   white-space: nowrap;
+  pointer-events: none;
 }
 
 .zone-content {
