@@ -10,11 +10,44 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css">
   <link rel="stylesheet" href="../../style.css">
 </head>
 <body>
-  <div id="app"></div>
+  <div class="reveal">
+    <div class="slides" id="slides-container"></div>
+  </div>
+
+  <div class="float-bar" id="float-bar">
+    <button class="float-btn" id="btn-outline">Outline</button>
+    <button class="float-btn" id="btn-activity">Activity</button>
+    <button class="float-btn float-btn-icon" id="btn-fullscreen" title="Fullscreen · F">⛶</button>
+  </div>
+
+  <div class="panel-backdrop" id="panel-backdrop"></div>
+
+  <aside class="side-panel" id="panel-outline" aria-hidden="true">
+    <div class="side-panel-head">
+      <span class="side-panel-title">Workshop 2 — Finding Your Subject</span>
+      <button class="side-panel-close" aria-label="Close">✕</button>
+    </div>
+    <div class="side-panel-body">
+      <div id="outline-body"></div>
+    </div>
+  </aside>
+
+  <aside class="side-panel" id="panel-activity" aria-hidden="true">
+    <div class="side-panel-head">
+      <span class="side-panel-title">The Zoom-In Map</span>
+      <button class="side-panel-close" aria-label="Close">✕</button>
+    </div>
+    <div class="side-panel-body">
+      <div id="activity-body"></div>
+    </div>
+  </aside>
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

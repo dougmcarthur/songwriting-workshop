@@ -234,125 +234,117 @@ const CARDS = [
 
 // ─── State ───────────────────────────────────────────────────────────────────
 
-const state = {
-  view: 'student',
-  tab: 'slides',
-  slide: 0,
-  placements: {},
-};
+const state = { panel: null };
 
 // ─── Init ────────────────────────────────────────────────────────────────────
 
 function init() {
-  const params = new URLSearchParams(window.location.search);
-  state.view = params.get('view') === 'instructor' ? 'instructor' : 'student';
-
-  const app = document.getElementById('app');
-
-  if (state.view === 'instructor') {
-    app.appendChild(buildInstructorView());
-    activateSlide(0, 'init');
-    setupInstructorKeyboard();
-  } else {
-    app.appendChild(buildStudentView());
-    switchStudentTab('slides');
-  }
-
-  // Global: song-link overlay triggers + close
+  buildSlides();
+  generateQR();
+  Reveal.initialize({
+    controls: true,
+    controlsTutorial: false,
+    controlsLayout: 'bottom-right',
+    progress: true,
+    slideNumber: false,
+    hash: true,
+    history: true,
+    keyboard: true,
+    overview: true,
+    center: false,
+    touch: true,
+    transition: 'slide',
+    transitionSpeed: 'fast',
+    backgroundTransition: 'none',
+    width: '100%',
+    height: '100%',
+    margin: 0,
+    minScale: 1,
+    maxScale: 1,
+  });
+  setupControls();
+  setupPanels();
   document.addEventListener('click', e => {
     const btn = e.target.closest('.song-link');
     if (btn) { openSongOverlay(btn.dataset.song); return; }
-    if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) {
-      closeSongOverlay();
+    if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) closeSongOverlay();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (document.querySelector('.song-overlay')) { closeSongOverlay(); e.stopImmediatePropagation(); return; }
+      if (state.panel) { closePanel(); e.stopImmediatePropagation(); return; }
     }
   });
+}
 
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeSongOverlay();
+// ─── Build slides ────────────────────────────────────────────────────────────
+
+function buildSlides() {
+  const container = document.getElementById('slides-container');
+  SLIDES.forEach((slide, i) => {
+    const section = document.createElement('section');
+    const inner = document.createElement('div');
+    inner.className = 'slide-inner';
+    inner.innerHTML = renderSlide(slide, i);
+    section.appendChild(inner);
+    container.appendChild(section);
   });
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  INSTRUCTOR VIEW
-// ═══════════════════════════════════════════════════════════════
+// ─── Controls ────────────────────────────────────────────────────────────────
 
-function buildInstructorView() {
-  const root = el('div', 'instructor-view');
-
-  const container = el('div', 'slides-container');
-  container.id = 'slides-container';
-
-  SLIDES.forEach((_, i) => {
-    const s = el('div', 'slide');
-    s.id = `slide-${i}`;
-    s.dataset.index = i;
-    container.appendChild(s);
+function setupControls() {
+  const btn = document.getElementById('btn-fullscreen');
+  if (!btn) return;
+  btn.addEventListener('click', toggleFullscreen);
+  document.addEventListener('fullscreenchange', () => {
+    btn.textContent = document.fullscreenElement ? '⊡' : '⛶';
+    btn.title = document.fullscreenElement ? 'Exit fullscreen · F' : 'Fullscreen · F';
   });
-
-  const nav = el('nav', 'instructor-nav');
-  nav.innerHTML = `
-    <button class="nav-btn" id="nav-prev" aria-label="Previous" disabled>&#8592;</button>
-    <div class="slide-progress" id="slide-progress">
-      ${SLIDES.map((_, i) => `<button class="progress-dot" data-i="${i}" aria-label="Slide ${i+1}"></button>`).join('')}
-    </div>
-    <button class="nav-btn" id="nav-next" aria-label="Next">&#8594;</button>
-    <span class="key-hint"><kbd>&#8592;</kbd>&nbsp;<kbd>&#8594;</kbd></span>
-  `;
-
-  root.appendChild(container);
-  root.appendChild(nav);
-
-  nav.querySelector('#nav-prev').addEventListener('click', () => activateSlide(state.slide - 1));
-  nav.querySelector('#nav-next').addEventListener('click', () => activateSlide(state.slide + 1));
-  nav.querySelectorAll('.progress-dot').forEach(dot => {
-    dot.addEventListener('click', () => activateSlide(+dot.dataset.i));
-  });
-
-  return root;
 }
 
-function activateSlide(index, mode = 'forward') {
-  index = Math.max(0, Math.min(SLIDES.length - 1, index));
-  if (index === state.slide && mode !== 'init') return;
+function toggleFullscreen() {
+  if (!document.fullscreenElement) document.documentElement.requestFullscreen?.();
+  else document.exitFullscreen?.();
+}
 
-  const prev = document.querySelector('.slide.active');
-  const next = document.getElementById(`slide-${index}`);
-  if (!next) return;
+// ─── Panels ──────────────────────────────────────────────────────────────────
 
-  if (!next.dataset.rendered) {
-    next.innerHTML = renderSlide(SLIDES[index], index);
-    next.dataset.rendered = '1';
-    if (index === 0) generateQR();
+function setupPanels() {
+  document.getElementById('btn-outline')?.addEventListener('click', () => togglePanel('outline'));
+  document.getElementById('btn-activity')?.addEventListener('click', () => togglePanel('activity'));
+  document.getElementById('panel-backdrop')?.addEventListener('click', closePanel);
+  document.querySelectorAll('.side-panel-close').forEach(b => b.addEventListener('click', closePanel));
+}
+
+function togglePanel(id) {
+  if (state.panel === id) { closePanel(); return; }
+  closePanel();
+  state.panel = id;
+  const panel = document.getElementById('panel-' + id);
+  if (!panel) return;
+  if (id === 'outline' && !panel.dataset.built) {
+    buildHandout(document.getElementById('outline-body'));
+    panel.dataset.built = '1';
   }
-
-  if (prev && prev !== next) {
-    prev.classList.add('exiting');
-    prev.addEventListener('transitionend', () => prev.classList.remove('active', 'exiting'), { once: true });
+  if (id === 'activity' && !panel.dataset.built) {
+    buildActivity(document.getElementById('activity-body'));
+    panel.dataset.built = '1';
   }
-
-  requestAnimationFrame(() => next.classList.add('active'));
-  state.slide = index;
-
-  const prevBtn = document.getElementById('nav-prev');
-  const nextBtn = document.getElementById('nav-next');
-  if (prevBtn) prevBtn.disabled = index === 0;
-  if (nextBtn) nextBtn.disabled = index === SLIDES.length - 1;
-  document.querySelectorAll('.progress-dot').forEach((d, i) =>
-    d.classList.toggle('active', i === index)
-  );
+  panel.classList.add('open');
+  panel.setAttribute('aria-hidden', 'false');
+  document.getElementById('panel-backdrop')?.classList.add('visible');
+  document.getElementById('btn-' + id)?.classList.add('active');
 }
 
-function setupInstructorKeyboard() {
-  document.addEventListener('keydown', e => {
-    if (document.querySelector('.song-overlay')) return; // let Escape close overlay
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
-      e.preventDefault();
-      activateSlide(state.slide + 1);
-    } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      e.preventDefault();
-      activateSlide(state.slide - 1);
-    }
-  });
+function closePanel() {
+  if (state.panel) {
+    document.getElementById('panel-' + state.panel)?.classList.remove('open');
+    document.getElementById('panel-' + state.panel)?.setAttribute('aria-hidden', 'true');
+    document.getElementById('btn-' + state.panel)?.classList.remove('active');
+  }
+  document.getElementById('panel-backdrop')?.classList.remove('visible');
+  state.panel = null;
 }
 
 // ─── Slide renderers ─────────────────────────────────────────────────────────
@@ -636,64 +628,9 @@ function closeSongOverlay() {
   existing.addEventListener('transitionend', () => existing.remove(), { once: true });
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  STUDENT VIEW
-// ═══════════════════════════════════════════════════════════════
-
-function buildStudentView() {
-  const root = el('div', 'student-view');
-
-  root.innerHTML = `
-    <header class="student-header">
-      <span class="workshop-label">Workshop 1 — Song Structure</span>
-      <span class="gss-label">Good Sky Studio</span>
-    </header>
-    <div class="student-tabs">
-      <button class="tab-btn" data-tab="slides">Slides</button>
-      <button class="tab-btn" data-tab="activity">Activity</button>
-    </div>
-    <div class="student-panel" id="panel-slides"></div>
-    <div class="student-panel" id="panel-activity" hidden></div>
-  `;
-
-  root.querySelectorAll('.tab-btn').forEach(btn => {
-    btn.addEventListener('click', () => switchStudentTab(btn.dataset.tab));
-  });
-
-  return root;
-}
-
-function switchStudentTab(tab) {
-  state.tab = tab;
-
-  document.querySelectorAll('.tab-btn').forEach(b =>
-    b.classList.toggle('active', b.dataset.tab === tab)
-  );
-
-  const slidesPanel   = document.getElementById('panel-slides');
-  const activityPanel = document.getElementById('panel-activity');
-
-  if (tab === 'slides') {
-    slidesPanel.hidden   = false;
-    activityPanel.hidden = true;
-    if (!slidesPanel.dataset.built) {
-      buildHandout(slidesPanel);
-      slidesPanel.dataset.built = '1';
-    }
-  } else {
-    slidesPanel.hidden   = true;
-    activityPanel.hidden = false;
-    if (!activityPanel.dataset.built) {
-      buildActivity(activityPanel);
-      activityPanel.dataset.built = '1';
-    }
-  }
-}
-
 // ─── Handout ──────────────────────────────────────────────────────────────────
 
 function buildHandout(panel) {
-  panel.className = 'student-panel';
   const wrap = el('div', 'handout');
 
   // Helper: build a song-link button for handout use
@@ -815,10 +752,9 @@ function buildHandout(panel) {
 //  ACTIVITY — Build Your Skeleton
 // ═══════════════════════════════════════════════════════════════
 
-function buildActivity(panel) {
-  panel.className = 'activity-view';
-
-  panel.innerHTML = `
+function buildActivity(container) {
+  const wrap = el('div', 'activity-view');
+  wrap.innerHTML = `
     <div class="activity-header">
       <div>
         <div class="activity-title">Build Your Skeleton</div>
@@ -848,8 +784,8 @@ function buildActivity(panel) {
       </div>
     </div>
   `;
-
-  panel.querySelector('#reset-btn').addEventListener('click', resetActivity);
+  container.appendChild(wrap);
+  wrap.querySelector('#reset-btn').addEventListener('click', resetActivity);
   setupDragAndDrop();
 }
 

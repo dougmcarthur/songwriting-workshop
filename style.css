@@ -1531,3 +1531,198 @@ body {
   border-color: rgba(200, 168, 74, 0.35);
   color: var(--accent);
 }
+
+/* ══════════════════════════════
+   REVEAL.JS — base overrides
+══════════════════════════════ */
+
+html, body { overflow: hidden; }
+
+.reveal {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-u);
+}
+
+.reveal .slides {
+  text-align: left;
+}
+
+.reveal .slides > section {
+  padding: 0;
+  height: 100%;
+  text-align: left;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+.slide-inner {
+  padding: var(--py) var(--px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+}
+
+/* Reveal controls */
+.reveal .controls { color: var(--accent); }
+.reveal .controls .controls-arrow { opacity: 0.4; }
+.reveal .controls .controls-arrow:hover { opacity: 1; }
+
+/* Reveal progress bar */
+.reveal .progress { color: var(--accent); height: 3px; }
+
+/* ══════════════════════════════
+   FLOAT BAR
+══════════════════════════════ */
+
+.float-bar {
+  position: fixed;
+  top: 0.85rem;
+  right: 1rem;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.float-btn {
+  background: rgba(10,9,8,0.82);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid var(--border-2);
+  color: var(--text-3);
+  padding: 0.3rem 0.6rem;
+  border-radius: var(--r-s);
+  font-family: var(--font-u);
+  font-size: 0.68rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: color var(--t), border-color var(--t), background var(--t);
+  line-height: 1.2;
+  white-space: nowrap;
+}
+
+.float-btn:hover {
+  color: var(--text);
+  border-color: var(--text-3);
+  background: rgba(20,18,16,0.92);
+}
+
+.float-btn.active {
+  color: var(--accent);
+  border-color: rgba(200,168,74,0.4);
+  background: rgba(200,168,74,0.08);
+}
+
+.float-btn-icon {
+  padding: 0.3rem 0.5rem;
+  font-size: 0.9rem;
+}
+
+/* ══════════════════════════════
+   PANEL BACKDROP
+══════════════════════════════ */
+
+.panel-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+.panel-backdrop.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* ══════════════════════════════
+   SIDE PANELS
+══════════════════════════════ */
+
+.side-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(480px, 96vw);
+  background: var(--surface);
+  border-left: 1px solid var(--border-2);
+  z-index: 300;
+  display: flex;
+  flex-direction: column;
+  transform: translateX(100%);
+  transition: transform 0.32s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.side-panel.open {
+  transform: translateX(0);
+}
+
+.side-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.85rem 1.1rem;
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  background: var(--surface-2);
+}
+
+.side-panel-title {
+  font-size: 0.65rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-2);
+}
+
+.side-panel-close {
+  background: none;
+  border: 1px solid var(--border-2);
+  color: var(--text-3);
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 0.72rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color var(--t), border-color var(--t);
+  padding: 0;
+  flex-shrink: 0;
+}
+
+.side-panel-close:hover { color: var(--text); border-color: var(--text-3); }
+
+.side-panel-body {
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Handout inside panel needs to scroll */
+.side-panel-body .handout {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex: 1;
+}
+
+/* Activity inside panel needs full height layout */
+.side-panel-body .activity-view {
+  flex: 1;
+  min-height: 0;
+}
