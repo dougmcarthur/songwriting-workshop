@@ -487,9 +487,9 @@ function renderSlide(slide, index) {
       return `
         <div class="hero-slide">
           ${ey}
-          <h2 style="margin-bottom:0.2em">${nl(slide.headline)}</h2>
+          <h2 style="margin-bottom:0.15em;font-size:1.15em;line-height:1.15">${nl(slide.headline)}</h2>
           <div class="hero-map-wrap">
-            <svg class="hero-map" viewBox="0 0 1160 500" xmlns="http://www.w3.org/2000/svg">
+            <svg class="hero-map" viewBox="0 0 1160 520" xmlns="http://www.w3.org/2000/svg">
               <defs>
                 <radialGradient id="hpg" cx="50%" cy="42%" r="74%">
                   <stop offset="0%" stop-color="#f2e5bb"/>
@@ -505,15 +505,15 @@ function renderSlide(slide, index) {
                 </filter>
               </defs>
 
-              <rect width="1160" height="500" fill="url(#hpg)"/>
-              <rect width="1160" height="500" fill="url(#hvg)"/>
-              <rect x="7" y="7" width="1146" height="486" rx="5" fill="none" stroke="rgba(100,62,10,0.5)" stroke-width="2.2"/>
-              <rect x="13" y="13" width="1134" height="474" rx="3" fill="none" stroke="rgba(100,62,10,0.22)" stroke-width="1"/>
+              <rect width="1160" height="520" fill="url(#hpg)"/>
+              <rect width="1160" height="520" fill="url(#hvg)"/>
+              <rect x="7" y="7" width="1146" height="506" rx="5" fill="none" stroke="rgba(100,62,10,0.5)" stroke-width="2.2"/>
+              <rect x="13" y="13" width="1134" height="494" rx="3" fill="none" stroke="rgba(100,62,10,0.22)" stroke-width="1"/>
 
               <!-- Ocean: left side (Ordinary World) -->
-              <path d="M20,272 Q90,260 162,272 L162,493 L20,493Z" fill="#b8d0e4" opacity="0.28"/>
+              <path d="M20,272 Q90,260 162,272 L162,513 L20,513Z" fill="#b8d0e4" opacity="0.28"/>
               <g fill="none" stroke="#5a8aaa" stroke-width="1.4" stroke-linecap="round" opacity="0.62">
-                ${[310,326,342,358,374,390,406,422,438,454,470,486].map((wy, wi) =>
+                ${[310,326,342,358,374,390,406,422,438,454,470,486,502].map((wy, wi) =>
                   `<path d="M${22+wi},${wy} Q${72+wi},${wy-10} ${122+wi},${wy} Q${148+wi},${wy+8} ${158+wi},${wy+4}"/>`
                 ).join('')}
               </g>
@@ -530,7 +530,7 @@ function renderSlide(slide, index) {
                     fill="none" stroke="#8b2020" stroke-width="2.8" stroke-dasharray="10 7" stroke-linecap="round"/>
 
               <!-- Compass rose -->
-              <g transform="translate(1100,452)" fill="#5a3810" opacity="0.78">
+              <g transform="translate(1100,472)" fill="#5a3810" opacity="0.78">
                 <polygon points="0,-17 3.5,-6.5 0,-2 -3.5,-6.5"/>
                 <polygon points="0,17 3.5,6.5 0,2 -3.5,6.5"/>
                 <polygon points="-17,0 -6.5,3.5 -2,0 -6.5,-3.5"/>
