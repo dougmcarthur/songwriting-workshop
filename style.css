@@ -1539,9 +1539,7 @@ body {
 html, body { overflow: hidden; }
 
 .reveal {
-  position: fixed !important;
-  inset: 0;
-  background: var(--bg);
+  background: var(--bg) !important;
   color: var(--text);
   font-family: var(--font-u);
 }
