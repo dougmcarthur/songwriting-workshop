@@ -1,10 +1,8 @@
-# Songwriting Workshop — Project Context & Status
+# Songwriting Workshop — Project Context & Handoff
 
 ## About This Project
 
-An interactive web slideshow for the **Pro Artist Series Songwriting Track** at **Good Sky Studio** (goodskystudio.com). Built for instructor **Doug McArthur** to use in a 4-week workshop series starting July 2026.
-
-Students join a live session by scanning a QR code displayed on Slide 1. The instructor controls the presentation from a projected/iPad screen. The last slide in each workshop is the interactive activity — students navigate there and work directly in the browser. No app install required.
+An interactive web slideshow for the **Pro Artist Series Songwriting Track** at **Good Sky Studio** (goodskystudio.com). Built for instructor **Doug McArthur**. Students join a live session via the URL displayed on Slide 1. The instructor drives the presentation; the last slide in each workshop is an interactive activity students use in their own browsers. No app install required.
 
 ---
 
@@ -12,71 +10,21 @@ Students join a live session by scanning a QR code displayed on Slide 1. The ins
 
 - **Repo:** `dougmcarthur/songwriting-workshop` (GitHub)
 - **Live site:** https://songwriting-workshop.pages.dev
+- **Workshop 2:** https://songwriting-workshop.pages.dev/workshops/w2/
 - **Hosting:** Cloudflare Pages — auto-deploys on every push to `main`
 - **Branch policy:** Always push directly to `main`
-- **Stack:** Vanilla HTML/CSS/JS + Reveal.js 5.1.0, no build step, no npm
+- **Stack:** Vanilla HTML/CSS/JS + Reveal.js 5.1.0 via CDN, no build step, no npm
 
 ---
 
-## Tech Stack
-
-### Reveal.js 5.1.0
-Both workshops use Reveal.js loaded from jsDelivr CDN:
-```html
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
-...
-<script src="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.js"></script>
-```
-
-**Critical:** Both `reset.css` AND `reveal.css` must be included. `reset.css` first.
-
-### Initialization pattern (working — don't change without testing)
-```js
-Reveal.initialize({
-  controls: true,
-  controlsTutorial: false,
-  controlsLayout: 'bottom-right',
-  progress: true,
-  slideNumber: false,
-  hash: true,
-  history: true,
-  keyboard: true,
-  overview: true,
-  center: false,
-  touch: true,
-  transition: 'slide',
-  transitionSpeed: 'fast',
-  backgroundTransition: 'none',
-  width: 1280,
-  height: 720,
-  margin: 0.04,
-}).then(() => {
-  generateQR();
-});
-window.addEventListener('resize', () => Reveal.layout());
-```
-
-**Do NOT use:** `window.innerWidth/Height`, `'100%'` strings, `minScale/maxScale`, or `requestAnimationFrame` wrappers — all were tried and caused blank/flashing slides.
-
-### CSS architecture
-- `style.css` is shared across all workshops (linked as `../../style.css` from subdirs)
-- Dark theme: `--bg: #0A0908`, `--accent: #C8A84A` (gold), `--text: #EDE8E0`
-- Fonts: Cormorant Garamond (display/serif) + Inter (UI/sans-serif) from Google Fonts
-- Key rule: `.reveal-viewport { background: var(--bg) }` — Reveal.js adds this class to `<body>` and its own default is white; this override keeps the dark background
-
-### Other CDN dependencies
-- QRCode.js: `https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js`
-
----
-
-## File Structure (Current)
+## File Structure
 
 ```
 songwriting-workshop/
 ├── index.html              # Workshop 1
 ├── app.js                  # Workshop 1 logic
-├── style.css               # Shared styles
+├── workshop-theme.css      # Shared custom styles (linked by both workshops)
+├── style.css               # OLD — DO NOT LINK (causes iOS Safari compositing bug)
 ├── context.md              # This file
 └── workshops/
     └── w2/
@@ -86,65 +34,162 @@ songwriting-workshop/
 
 ---
 
-## UI Layout
+## Tech Stack
 
-Each workshop page has:
-- **`.reveal` container** — full-page Reveal.js presentation
-- **Float bar** (top-right, `position: fixed`, `z-index: 100`) — two buttons:
-  - **Activity** — jumps directly to the last slide (the activity slide)
-  - **Fullscreen** (⛶ icon) — toggles browser fullscreen; keyboard shortcut `F`
-- **No sidebar panels** — outline and activity panels were removed; activity is a proper slide
+### Reveal.js 5.1.0
+
+Both workshops use identical HTML structure:
+
+```html
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700&family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;1,9..40,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
+<link rel="stylesheet" href="workshop-theme.css">   <!-- ../../workshop-theme.css for w2 -->
+```
+
+**Critical init pattern — do not change without testing on iOS Safari:**
+```js
+Reveal.initialize({
+  hash: true,
+  width: 1280,
+  height: 720,
+  center: true,
+});
+```
+
+Do NOT add: `window.innerWidth/Height`, `'100%'` strings, `minScale/maxScale`, `requestAnimationFrame` wrappers — all were tried and caused blank/invisible slides on iOS Safari.
+
+### iOS Safari compositing bug (FIXED — do not regress)
+
+Setting `background` on `.reveal` itself creates a separate compositing layer on iOS Safari that renders on top of slide content, making everything invisible. The fix: **never set `background` on `.reveal`**. Only set it on `body` and `.reveal-viewport`. This is why `style.css` is not linked — it had `background: var(--bg) !important` on `.reveal`.
+
+`workshop-theme.css` correctly sets:
+```css
+body, .reveal-viewport { background: var(--bg) !important; }
+/* .reveal — NO background rule here */
+```
+
+### Fonts
+
+- **Poppins 600/700** — all headings (`h1`, `h2`, `h3`, `h4`)
+- **DM Sans 400/500** — all body text
+- Reveal's default `text-transform: uppercase` on headings is overridden to `none`
+- Heading `letter-spacing: -0.025em` for tight modern feel
+
+### CSS architecture
+
+`workshop-theme.css` (shared, in root, `../../workshop-theme.css` from w2):
+- Typography overrides (Poppins headings, DM Sans body, no uppercase, tight kerning)
+- Table styles: no border lines, alternating row tints at 4% white opacity
+- `.song-link` base: no underline, no border/bg, hover opacity
+- Evidence card grid (`.evidence-grid`, `.evidence-card`)
+- Playlist table (`.playlist-table`, `.playlist-create-btn`)
+- Song overlay (`.song-overlay`, `.song-card`, `.platform-btn`)
+- W1 activity: drag-and-drop zones and card pool
+- W2 activity: zoom-map inputs and seed card pool
+
+`style.css` — exists but is **not linked anywhere**. Contains old styles from before the iOS Safari fix. Do not link it.
+
+---
+
+## Slide System
+
+Each workshop's `app.js` defines:
+- `SONGS` — song registry `{ id: { title, artist, year } }`
+- `PLAYLIST_GROUPS` — ordered groups for the playlist slide
+- `SLIDES` — array of slide data objects
+- `renderSlide(slide, index)` — switch on `slide.type`, returns HTML string
+- `buildSlides()` — iterates `SLIDES`, creates `<section>` elements, appends to `#slides-container`
+
+The activity slide is built by `buildActivity(section)` (separate DOM approach, not innerHTML).
+
+### Slide types (W1)
+
+| Type | Description |
+|------|-------------|
+| `hook` | Large headline, sub-body. Fixed 2.8em font-size (not r-fit-text) to prevent overflow |
+| `structure` | Block sequence (A B A B C B B) + legend. Centered. Explanatory text removed |
+| `eras` | 3-column grid — each era: year (dim) → song title (bold, clickable) → ARTIST (small caps) → mini blocks |
+| `table` | Alternatives table — subtle alternating rows, no bold borders |
+| `evidence` | Headline + big "No." answer + 3-card grid with coloured art headers |
+| `hero` | Hero's Journey parallel table |
+| `casestudy` | Headline + subhead + body text (0.65em, line-height 1.65) + listen button |
+| `thesis` | Two-line split headline (line 1 dim, line 2 full), small cue below |
+| `playlist` | Streaming-service numbered table + green "Create Playlist" button |
+| `activity` | Built by `buildActivity()` — drag-and-drop skeleton builder |
+
+### Slide types (W2)
+
+| Type | Description |
+|------|-------------|
+| `hook` | Same as W1 hook |
+| `comparison` | Two-column Topic vs. Subject grid |
+| `contrast` | Weak→strong example pairs with arrow |
+| `camera` | Headline + body + bullet cues |
+| `zoom` | Vertical stack of zoom levels (theme → angle → scene) with ↓ arrows |
+| `casestudy` | Same as W1 casestudy |
+| `thesis` | Same as W1 thesis |
+| `playlist` | Same as W1 playlist |
+| `activity` | Built by `buildActivity()` — zoom-in map text inputs |
+
+---
+
+## Song Overlay
+
+Every `<button class="song-link" data-song="[id]">` opens a streaming links modal. The overlay is handled by `openSongOverlay(songId)` / `closeSongOverlay()`. The modal shows the song title + 4 platform links (Spotify, Apple Music, YouTube Music, YouTube) constructed as search URLs.
+
+Click handler is attached globally in `init()`:
+```js
+document.addEventListener('click', e => {
+  const btn = e.target.closest('.song-link');
+  if (btn) { openSongOverlay(btn.dataset.song); return; }
+  if (e.target.closest('.overlay-backdrop') || e.target.closest('.overlay-close')) closeSongOverlay();
+  const copyBtn = e.target.closest('#playlist-copy-btn');
+  if (copyBtn) { handlePlaylistCopy(copyBtn); return; }
+});
+```
+
+---
+
+## Playlist Slide
+
+Displays songs in a numbered streaming-service table: `# | Title | Artist | Year`, grouped by section with dim uppercase group headers.
+
+**"Create Playlist ↗" button** (Spotify green):
+1. Formats song list as `Song Title - Artist` (one per line)
+2. Copies to clipboard
+3. Opens https://spotlistr.com in a new tab
+4. Button text changes to "Copied! Opening Spotlistr…" for 3 seconds
+
+On Spotlistr the user pastes the clipboard content to generate a Spotify / Apple Music / YouTube playlist automatically.
 
 ---
 
 ## Workshop 1: Know the Rules So You Can Break Them
 
-**File:** `index.html` + `app.js`
+**Songs:** Your Cheatin' Heart (Hank Williams, 1953), Hey Jude (The Beatles, 1968), Last Night (Morgan Wallen, 2023), The Times They Are A-Changin' (Bob Dylan, 1964), Over the Rainbow (Judy Garland, 1939), Jolene (Dolly Parton, 1973), Bohemian Rhapsody (Queen, 1975), A Day in the Life (The Beatles, 1967), What's Going On (Marvin Gaye, 1971), Fast Car (Tracy Chapman, 1988), Hurt (Johnny Cash, 2002), Alright (Kendrick Lamar, 2015), Don't Dream It's Over (Crowded House, 1986)
 
-**Slides (dynamically built from `SLIDES` array in `app.js`):**
-1. Hook — "Every song you've ever loved has a skeleton"
-2. Structure — The standard ABABCBB map with visual block diagram
-3. Eras — Same structure across eras (Hank Williams → Beatles → current)
-4. Table — Other structures worth knowing (AAA, AABA, Verse-Chorus, Through-composed, Loop)
-5. Evidence — Do songs need a chorus? Fast Car, Hurt, Alright
-6. Hero — Hero's Journey parallel table
-7. Case Study — "Don't Dream It's Over" — Crowded House
-8. Thesis — "Structure isn't the cage. It's the launching pad."
-9. Playlist — Listen list with platform links
-10. **Activity slide** — "Build Your Skeleton" (drag-and-drop)
-
-**Activity ("Build Your Skeleton"):**
-- Drag phrase cards into song structure drop zones (V1, Pre-Ch, Ch1, V2, Ch2, Bridge, Outro)
-- 10 phrase cards (e.g. "The drive home after the fight", "3am, can't sleep again")
-- Drag ghost is `position: fixed` so it works correctly under Reveal's CSS scale transform
+**Activity — Build Your Skeleton:**
+- 7 drop zones: V1, Pre-Ch, Ch1, V2, Ch2, Bridge, Outro
+- 10 draggable phrase cards (e.g. "The drive home after the fight")
+- Pointer Events API drag-and-drop (works on touch/iOS)
+- Drag ghost is `position: fixed` to work under Reveal's CSS scale transform
 - Reset button clears all placements
-
-**Songs referenced:** Your Cheatin' Heart, Hey Jude, Last Night, Times They Are A-Changin', Over the Rainbow, Jolene, Bohemian Rhapsody, A Day in the Life, What's Going On, Fast Car, Hurt, Alright, Don't Dream It's Over
 
 ---
 
 ## Workshop 2: What Are You Actually Saying?
 
-**File:** `workshops/w2/index.html` + `workshops/w2/app.js`
+**Songs:** The River (Bruce Springsteen, 1980), Fast Car (Tracy Chapman, 1988), The Night They Drove Old Dixie Down (The Band, 1969), Allentown (Billy Joel, 1982), Supermarket Flowers (Ed Sheeran, 2017)
 
-**Slides:**
-1. Hook — "Every song has a topic. Only the great ones have a subject."
-2. Comparison — Topic vs. Subject (side-by-side two-column)
-3. Contrast — Vague vs. Specific language examples
-4. Camera — "Write what a camera can see"
-5. Zoom — The zoom-in technique diagram
-6. Case Study — "The River" by Bruce Springsteen
-7. Thesis — "The more specific you are, the more universal you become."
-8. Playlist — Listen list
-9. **Activity slide** — "The Zoom-In Map" (text inputs)
-
-**Activity ("The Zoom-In Map"):**
-- Three-level form: Theme → Your Angle → The Scene
-- "Can you point a camera at this?" prompt appears on Scene field focus
-- Seed theme cards (click to populate Theme field): Loss, Home, Identity, etc.
+**Activity — The Zoom-In Map:**
+- Three-level form: Theme (input) → Your Angle (textarea) → The Scene (textarea)
+- "Can you point a camera at this?" prompt appears when Scene field is focused
+- 12 seed theme cards (click to populate Theme field)
 - Reset button clears all fields
-
-**Songs referenced:** The River, Fast Car, The Night They Drove Old Dixie Down, Allentown, Supermarket Flowers
 
 ---
 
@@ -152,22 +197,21 @@ Each workshop page has:
 
 ### Workshop 3: What Do You Sound Like?
 *Voice, Language & Lyric*
-- Concept: Writing *about* vs. writing *from inside*. Plain vs. poetic language. The cliché ban.
-- Activity: The Rewrite Game (write a verse in clichés, swap papers, rewrite to be specific and weird)
+- Writing *about* vs. writing *from inside*. Plain vs. poetic language. The cliché ban.
+- Activity: The Rewrite Game — write a verse in clichés, rewrite it to be specific and weird
 
 ### Workshop 4: How Do You Finish Anything?
 *From Fragment to Song*
-- Concept: Finishing is a skill. The Minimum Viable Draft.
-- Activity: The Assembly Session (structured sprint: 15 min verse / 15 min chorus / 10 min bridge / 5 min read aloud)
+- Finishing is a skill. The Minimum Viable Draft.
+- Activity: The Assembly Session — structured sprint (15 min verse / 15 min chorus / 10 min bridge / 5 min read aloud)
 
 ---
 
-## Known Issues / Next Steps
+## Pending / Future Work
 
-- **Slide content visibility** — There was a persistent flash-then-disappear bug through multiple attempts. The current state (Reveal.js 5.1.0, reset.css, 1280×720 explicit dimensions) matches the working reference at https://github.com/ryanbbrown/revealjs-skill — verify at https://songwriting-workshop.pages.dev
-- **Workshops 3 and 4** — Curriculum is defined above, implementation not started
-- **Real-time student sync** — Originally planned stretch goal (students see each other's skeleton in real time). Not started; would require a backend (Cloudflare Workers + D1 or similar)
-- **Workshop 1 Outline** — The outline/handout panel was removed for simplicity. If Doug wants it back, it would be an aside panel triggered by a button in the float bar
+- **Workshops 3 and 4** — Curriculum defined above, slides not yet built
+- **Real-time student sync** — Stretch goal: students see each other's activity responses live. Would require Cloudflare Workers + D1
+- **Artist/album images** — Evidence cards use coloured gradient placeholders. Framework is in place (`.evidence-card-art` div); real images could be added via an `art` URL field in `SONGS`
 
 ---
 
@@ -188,8 +232,7 @@ Each workshop page has:
 ## Key Links
 
 - Live site: https://songwriting-workshop.pages.dev
+- Workshop 2: https://songwriting-workshop.pages.dev/workshops/w2/
 - Repo: https://github.com/dougmcarthur/songwriting-workshop
 - Program page: https://goodskystudio.com/the-pro-artist-series/
 - Studio site: https://goodskystudio.com
-- Logo: https://i0.wp.com/goodskystudio.com/wp-content/uploads/2025/02/logo-gss-1.png
-- Reveal.js reference implementation: https://github.com/ryanbbrown/revealjs-skill
