@@ -369,7 +369,7 @@ function renderSlide(slide, index) {
           ? `<button class="song-link" data-song="${era.songId}">${esc(era.song)}</button>`
           : `<span>${esc(era.song)}</span>`;
         return `
-          <div style="border-top:2px solid rgba(255,255,255,0.15);padding-top:0.75em;text-align:center">
+          <div class="era-card" style="border-top:2px solid rgba(255,255,255,0.15);padding-top:0.75em;text-align:center">
             <p style="opacity:0.45;font-size:0.7em;margin-bottom:0.35em">${esc(era.year)}</p>
             <p style="font-size:0.95em;font-weight:700;margin-bottom:0.2em">${songEl}</p>
             <p style="font-size:0.6em;text-transform:uppercase;letter-spacing:0.08em;opacity:0.45;margin-bottom:0.55em">${esc(era.artist)}</p>
@@ -428,7 +428,7 @@ function renderSlide(slide, index) {
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <p style="font-size:2em;font-weight:700;font-family:'Poppins',sans-serif;letter-spacing:-0.03em;margin:0.1em 0 0.4em">${esc(slide.answer)}</p>
+        <p class="evidence-answer" style="font-size:2em;font-weight:700;font-family:'Poppins',sans-serif;letter-spacing:-0.03em;margin:0.1em 0 0.4em">${esc(slide.answer)}</p>
         <div class="evidence-grid">${cards}</div>
         <p style="font-size:0.6em;opacity:0.55;margin-top:0.5em">${esc(slide.body)}</p>
       `;
@@ -554,11 +554,14 @@ function renderSlide(slide, index) {
       const listenBtn = slide.songId
         ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
+      const bodyParas = slide.body.split('\n\n').map((para, pi) =>
+        `<p style="font-size:0.65em;line-height:1.65;margin-top:${pi === 0 ? '0.6em' : '0.5em'}">${nl(para)}</p>`
+      ).join('');
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
-        <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em">${nl(slide.body)}</p>
+        <div class="casestudy-body">${bodyParas}</div>
         ${listenBtn}
       `;
     }
@@ -813,6 +816,16 @@ function buildActivity(section) {
     </div>
   `;
   section.appendChild(wrap);
+
+  const mobileMsg = document.createElement('div');
+  mobileMsg.className = 'activity-mobile-msg';
+  mobileMsg.innerHTML = `
+    <div style="font-size:2em;opacity:0.35;margin-bottom:0.4em">⌘</div>
+    <p style="font-size:0.8em;font-weight:700;margin-bottom:0.3em">Open on a laptop</p>
+    <p style="font-size:0.65em;opacity:0.55;line-height:1.6">This activity uses drag-and-drop<br>and needs a larger screen to work.</p>
+  `;
+  section.appendChild(mobileMsg);
+
   wrap.querySelector('#reset-btn').addEventListener('click', resetActivity);
   setupDragAndDrop();
 }

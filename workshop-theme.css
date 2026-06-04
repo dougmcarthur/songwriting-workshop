@@ -925,4 +925,77 @@ body,
     flex-direction: column;
     align-items: flex-start;
   }
+
+  /* ── Slide 3 (eras): tighten vertical rhythm so 3 cards fit in canvas ── */
+  .eras-grid {
+    gap: 0.4em !important;
+    margin-top: 0.2em !important;
+  }
+
+  .era-card {
+    padding-top: 0.35em !important;
+  }
+
+  .era-card p {
+    margin-bottom: 0.1em !important;
+  }
+
+  /* ── Slide 5 (evidence): reduce art height + hide notes, shrink "No." ── */
+  .evidence-answer {
+    font-size: 1.2em !important;
+    margin: 0.05em 0 0.2em !important;
+  }
+
+  .evidence-grid {
+    gap: 0.35em;
+  }
+
+  .evidence-card-art {
+    height: 36px;
+    font-size: 1.4em;
+  }
+
+  .evidence-card-body {
+    padding: 0.3em 0.6em 0.35em;
+  }
+
+  .evidence-card-title {
+    margin-bottom: 0.1em;
+  }
+
+  .evidence-card-artist {
+    margin-bottom: 0;
+  }
+
+  /* Notes are the longest text in the card — hiding them saves ~55px per card */
+  .evidence-card-note {
+    display: none;
+  }
+
+  /* ── Slide 7 (case study): tighten paragraph spacing ── */
+  .casestudy-body p {
+    margin-top: 0.2em !important;
+    line-height: 1.5 !important;
+  }
+
+  /* ── Slide 9 (activity): hide drag-and-drop, show desktop-only message ── */
+  .activity-view {
+    display: none !important;
+  }
+
+  .activity-mobile-msg {
+    display: flex;
+  }
+}
+
+/* ─── Activity mobile message (hidden by default, shown at ≤640px) ─────────── */
+.activity-mobile-msg {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: 100%;
+  color: #fff;
+  gap: 0;
 }
