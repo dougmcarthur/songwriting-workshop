@@ -174,6 +174,7 @@ const state = { placements: {} };
 
 function init() {
   buildSlides();
+  // Keep in sync with app.js
   Reveal.initialize({
     hash: true,
     width: 1280,
