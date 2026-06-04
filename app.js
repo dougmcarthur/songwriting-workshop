@@ -380,7 +380,7 @@ function renderSlide(slide, index) {
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5em;font-size:0.8em;margin-top:0.5em">${cards}</div>
+        <div class="eras-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5em;font-size:0.8em;margin-top:0.5em">${cards}</div>
       `;
     }
 

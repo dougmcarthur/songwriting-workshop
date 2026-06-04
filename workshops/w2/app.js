@@ -270,7 +270,7 @@ function renderSlide(slide, index) {
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:2em;margin-top:0.5em">${col(slide.left)}${col(slide.right)}</div>
+        <div class="comparison-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2em;margin-top:0.5em">${col(slide.left)}${col(slide.right)}</div>
       `;
     }
 
@@ -278,7 +278,7 @@ function renderSlide(slide, index) {
       const pairs = slide.pairs.map(p => `
         <div style="margin-bottom:0.75em">
           <p style="font-size:0.55em;opacity:0.55;margin-bottom:0.3em;text-transform:uppercase;letter-spacing:.05em">${esc(p.label)}</p>
-          <div style="display:grid;grid-template-columns:1fr auto 1fr;gap:0.75em;align-items:center;font-size:0.7em">
+          <div class="contrast-grid" style="display:grid;grid-template-columns:1fr auto 1fr;gap:0.75em;align-items:center;font-size:0.7em">
             <div style="padding:0.5em 0.75em;border:1px solid rgba(255,255,255,0.2);border-radius:4px;opacity:0.55">${esc(p.weak)}</div>
             <span style="opacity:0.4">→</span>
             <div style="padding:0.5em 0.75em;border:1px solid rgba(255,255,255,0.6);border-radius:4px">${esc(p.strong)}</div>
