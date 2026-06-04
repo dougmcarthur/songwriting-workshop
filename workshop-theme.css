@@ -866,9 +866,17 @@ body,
     font-size: 1.6em !important;
   }
 
-  /* Activity title inherits Reveal base em, keep it compact */
+  /* Activity title: flex header shares row with Reset button (~40% width),
+     so reduce title size to keep it to 2 lines */
   .activity-title {
-    font-size: 1em !important;
+    font-size: 0.85em !important;
+  }
+
+  /* Table: 3 columns don't fit on narrow canvas and overflow:hidden on section
+     prevents horizontal scroll — hide the Example column instead */
+  .table-wrap table th:last-child,
+  .table-wrap table td:last-child {
+    display: none;
   }
 
   /* All multi-column grids → single column */
