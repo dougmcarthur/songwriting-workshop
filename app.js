@@ -337,7 +337,7 @@ function renderSlide(slide, index) {
     case 'hook':
       return `
         ${ey}
-        <h2 style="font-size:2.8em;line-height:1.1;margin-bottom:0.4em;letter-spacing:-0.03em">${nl(slide.headline)}</h2>
+        <h2 class="hook-h2" style="line-height:1.1;margin-bottom:0.4em;letter-spacing:-0.03em">${nl(slide.headline)}</h2>
         <p style="font-size:0.72em;opacity:0.72;margin:0">${nl(slide.body)}</p>
       `;
 
@@ -394,10 +394,12 @@ function renderSlide(slide, index) {
       return `
         ${ey}
         <h2>${nl(slide.headline)}</h2>
-        <table style="font-size:0.68em;margin-top:0.5em">
-          <thead><tr><th>Structure</th><th>What it is</th><th>Example</th></tr></thead>
-          <tbody>${rows}</tbody>
-        </table>
+        <div class="table-wrap">
+          <table style="font-size:0.68em;margin-top:0.5em">
+            <thead><tr><th>Structure</th><th>What it is</th><th>Example</th></tr></thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
       `;
     }
 

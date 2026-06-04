@@ -41,6 +41,17 @@ body,
   font-size: var(--r-heading2-size, 1.6em);
 }
 
+/* Hook headline — large display size, moved from inline style so mobile can override */
+.hook-h2 {
+  font-size: 2.8em;
+}
+
+/* Table wrapper — allows horizontal scroll on narrow viewports */
+.table-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
 /* ─── Tables ─────────────────────────────────────────────────────────────────── */
 .reveal table {
   border-collapse: collapse;
@@ -834,6 +845,30 @@ body,
   /* Tighter slide padding so content has more room */
   .reveal .slides section {
     padding: 14px 20px;
+  }
+
+  /* Override Reveal's word-wrap: break-word, which splits mid-character on narrow canvases.
+     With reduced font sizes below, all common words fit on a single line. */
+  .reveal h1,
+  .reveal h2,
+  .reveal h3 {
+    overflow-wrap: normal !important;
+    word-wrap: normal !important;
+  }
+
+  /* Scale h2 down so words fit the ~295px phone canvas without mid-word breaks */
+  .reveal h2 {
+    font-size: 1.2em !important;
+  }
+
+  /* Hook headline was 2.8em — reduce but keep it visually dominant */
+  .hook-h2 {
+    font-size: 1.6em !important;
+  }
+
+  /* Activity title inherits Reveal base em, keep it compact */
+  .activity-title {
+    font-size: 1em !important;
   }
 
   /* All multi-column grids → single column */
