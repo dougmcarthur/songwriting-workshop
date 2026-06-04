@@ -580,6 +580,7 @@ body,
   flex-direction: column;
   gap: 4px;
   min-height: 0;
+  padding-left: 30px;
 }
 
 /* Each zone row: [drop container] [dim label] */

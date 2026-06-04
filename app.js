@@ -241,6 +241,7 @@ const state = { placements: {} };
 
 function init() {
   buildSlides();
+  // Keep in sync with workshops/w2/app.js
   Reveal.initialize({
     hash: true,
     width: '90%',
