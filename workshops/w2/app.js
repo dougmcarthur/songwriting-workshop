@@ -48,6 +48,13 @@ const PLAYLIST_GROUPS = [
 
 const SLIDES = [
   {
+    id: 'title',
+    type: 'title',
+    classNumber: 2,
+    date: 'July 14, 2026',
+    headline: 'What Are You\nActually Saying?',
+  },
+  {
     id: 'hook',
     type: 'hook',
     eyebrow: 'Workshop 2  ·  Good Sky Studio',
@@ -380,6 +387,15 @@ function renderSlide(slide, index) {
         </table>
       `;
     }
+
+    case 'title':
+      return `
+        <div class="title-slide">
+          <p class="title-eyebrow">Good Sky Studio &middot; Pro Artist Series &middot; Songwriting Track</p>
+          <h2 class="title-headline">${nl(slide.headline)}</h2>
+          <p class="title-meta">Class ${slide.classNumber} of 4 &middot; ${esc(slide.date)}</p>
+        </div>
+      `;
 
     default:
       return `<p>Slide ${index + 1}</p>`;

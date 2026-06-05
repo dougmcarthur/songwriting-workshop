@@ -94,6 +94,21 @@ const PLAYLIST_GROUPS = [
 
 const SLIDES = [
   {
+    id: 'title',
+    type: 'title',
+    classNumber: 1,
+    date: 'July 7, 2026',
+    headline: 'Know the Rules\nSo You Can\nBreak Them',
+  },
+  {
+    id: 'instructor',
+    type: 'instructor',
+  },
+  {
+    id: 'housekeeping',
+    type: 'housekeeping',
+  },
+  {
     id: 'hook',
     type: 'hook',
     eyebrow: 'Workshop 1  ·  Good Sky Studio',
@@ -607,6 +622,75 @@ function renderSlide(slide, index) {
           </tr></thead>
           <tbody>${rows}</tbody>
         </table>
+      `;
+    }
+
+    case 'title':
+      return `
+        <div class="title-slide">
+          <p class="title-eyebrow">Good Sky Studio &middot; Pro Artist Series &middot; Songwriting Track</p>
+          <h2 class="title-headline">${nl(slide.headline)}</h2>
+          <p class="title-meta">Class ${slide.classNumber} of 4 &middot; ${esc(slide.date)}</p>
+        </div>
+      `;
+
+    case 'instructor':
+      return `
+        <div class="instructor-slide">
+          <div class="instructor-photo-ring">
+            <!-- Replace src with photo URL from dougmcarthur.net -->
+            <img class="instructor-photo" src="" alt="Doug McArthur" onerror="this.style.opacity='0'">
+            <span class="instructor-initials">DM</span>
+          </div>
+          <div class="instructor-text">
+            <p class="instructor-eyebrow">Your instructor</p>
+            <h2 class="instructor-name">Doug McArthur</h2>
+            <p class="instructor-title-line">Singer-songwriter &middot; Winnipeg, MB</p>
+            <ul class="instructor-highlights">
+              <li><strong>Broken Halo</strong> &mdash; Won Power 97 Winnipeg&rsquo;s Class of 2010 with &ldquo;Rooftops&rdquo;; opened for Disturbed &amp; Avenged Sevenfold at MTS Centre</li>
+              <li><strong>Soapbox</strong> &mdash; Alt-rock five-piece, Western Canada (2015)</li>
+              <li><strong>Solo</strong> &mdash; &ldquo;Hermit Phase&rdquo; (2023) &middot; &ldquo;Magic&rdquo; (2025) &mdash; Power 97 airplay, Manitoba Music Song of the Week</li>
+              <li><strong>Sun Dogs</strong> &mdash; Bi-monthly songwriter showcase at The Handsome Daughter</li>
+              <li><strong>Community</strong> &mdash; Songwriting retreats on Lake of the Woods &middot; One-Day Choir at The Forks</li>
+            </ul>
+          </div>
+        </div>
+      `;
+
+    case 'housekeeping': {
+      const classes = [
+        { date: 'Jul 7',  name: 'Know the Rules So You Can Break Them', active: true },
+        { date: 'Jul 14', name: 'What Are You Actually Saying?',         active: false },
+        { date: 'Jul 21', name: 'What Do You Sound Like?',               active: false },
+        { date: 'Jul 28', name: 'How Do You Finish Anything?',           active: false },
+      ];
+      const scheduleRows = classes.map(c =>
+        `<li class="hk-schedule-item${c.active ? ' hk-active' : ''}">
+          <span class="hk-date">${c.date}</span>
+          <span class="hk-name">${c.name}</span>
+        </li>`
+      ).join('');
+      return `
+        <p style="font-size:0.45em;text-transform:uppercase;letter-spacing:.15em;opacity:0.55;margin:0 0 0.3em">Before we start</p>
+        <h2 class="housekeeping-headline">A few things.</h2>
+        <div class="housekeeping-cols">
+          <div class="housekeeping-col">
+            <h3 class="hk-col-head">This Series</h3>
+            <ul class="hk-schedule">${scheduleRows}</ul>
+          </div>
+          <div class="housekeeping-col">
+            <h3 class="hk-col-head">Feedback</h3>
+            <p class="hk-body">Positive comments only &mdash; we build each other up. No critiques unless explicitly asked.</p>
+            <h3 class="hk-col-head" style="margin-top:0.9em">Take Care of Yourselves</h3>
+            <ul class="hk-care">
+              <li>Bathroom when you need &mdash; no need to ask</li>
+              <li>Get up, stretch, move your body whenever</li>
+              <li>Never hesitate to ask for accommodations</li>
+              <li>Reach out to Doug or Chantal for feedback, absences, or anything that happened in class that made you uncomfortable</li>
+              <li>Take care of yourselves and each other ♡</li>
+            </ul>
+          </div>
+        </div>
       `;
     }
 
