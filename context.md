@@ -50,17 +50,20 @@ Both workshops use identical HTML structure:
 <link rel="stylesheet" href="workshop-theme.css">   <!-- ../../workshop-theme.css for w2 -->
 ```
 
-**Critical init pattern — do not change without testing on iOS Safari:**
+**Reveal init config — both workshops use identical values (do not change without testing on iOS Safari):**
 ```js
 Reveal.initialize({
   hash: true,
-  width: 1280,
-  height: 720,
+  width: '90%',
+  height: 900,
+  margin: 0.06,
   center: true,
 });
 ```
 
-Do NOT add: `window.innerWidth/Height`, `'100%'` strings, `minScale/maxScale`, `requestAnimationFrame` wrappers — all were tried and caused blank/invisible slides on iOS Safari.
+Do NOT add: `window.innerWidth/Height`, fixed pixel widths, `minScale/maxScale`, `requestAnimationFrame` wrappers — all were tried and caused blank/invisible slides on iOS Safari.
+
+**Mobile scaling math:** With `width: '90%'` on a 390px iPhone, slide canvas = 351px. Reveal applies `transform: scale()` so usable width after the 6% margin ≈ 295px. Media queries fire on the actual viewport (390px), not the scaled canvas — so `@media (max-width: 640px)` correctly targets phones even though the canvas is narrower.
 
 ### iOS Safari compositing bug (FIXED — do not regress)
 
@@ -90,8 +93,55 @@ body, .reveal-viewport { background: var(--bg) !important; }
 - Song overlay (`.song-overlay`, `.song-card`, `.platform-btn`)
 - W1 activity: drag-and-drop zones and card pool
 - W2 activity: zoom-map inputs and seed card pool
+- **Mobile responsive section at end of file** (see Mobile Responsive Design below)
 
 `style.css` — exists but is **not linked anywhere**. Contains old styles from before the iOS Safari fix. Do not link it.
+
+---
+
+## Mobile Responsive Design
+
+### Strategy
+
+Reveal.js scales the entire slide canvas via `transform: scale()`. This means inline styles can't be overridden by media queries without `!important` — so JS-rendered HTML elements that need mobile overrides must have **CSS class hooks** added so `workshop-theme.css` can target them.
+
+**Key class hooks added to JS-rendered HTML:**
+
+| Class | Element | Where |
+|-------|---------|--------|
+| `.hook-h2` | Hook slide `<h2>` | W1 `app.js` hook case |
+| `.era-card` | Each era column div | W1 `app.js` eras case |
+| `.eras-grid` | Era grid wrapper | W1 `app.js` eras case |
+| `.table-wrap` | Wrapper around structures table | W1 `app.js` table case |
+| `.evidence-answer` | "No." paragraph | W1 `app.js` evidence case |
+| `.casestudy-body` | Body paragraph wrapper | W1 `app.js` casestudy case |
+| `.comparison-grid` | Comparison slide grid | W2 `app.js` comparison case |
+| `.contrast-grid` | Contrast slide grid | W2 `app.js` contrast case |
+
+### Reveal quirks that affect mobile
+
+- **`overflow: hidden` on `<section>`**: Prevents horizontal scroll inside slides. A `overflow-x: auto` child wrapper does nothing. Fix: hide columns (`display: none`) instead of scrolling.
+- **`word-wrap: break-word` on headings**: Causes mid-character line breaks on narrow canvases. Override: `overflow-wrap: normal !important; word-wrap: normal !important`.
+- **`em` values inherit Reveal base (~40px)**: Not browser default 16px. Budget accordingly.
+- **Hero modal is outside Reveal transform** (`position: fixed` appended to `body`): A `min-width` value physically overflows phone screens. Must be removed.
+
+### Breakpoints in `workshop-theme.css`
+
+**`@media (max-width: 900px)` — Tablet:**
+- Evidence grid: 3-col → 2-col
+- Hero modal: remove fixed `min-width`, cap at `min(90vw, 560px)`
+- W2 zoom-map seed panel: stacks below instead of side-by-side
+
+**`@media (max-width: 640px)` — Phone (~295px usable canvas):**
+- Slide padding tightened to 14px 20px
+- All multi-column grids (`eras-grid`, `evidence-grid`, `comparison-grid`, `contrast-grid`) → 1 column
+- `h2` font-size 1.2em, hook `h2` 1.6em (prevents mid-word breaks)
+- Structures table: last (Example) column hidden — can't scroll inside Reveal section
+- Slide 3 eras: gap/padding/margins tightened so 3 cards fit
+- Slide 5 evidence: art height 36px, card notes hidden, "No." shrunk to 1.2em
+- Slide 7 case study: body `<p>` margin-top 0.2em (body is split `<p>` elements, not `<br><br>`)
+- Slide 9 activity: `.activity-view` hidden, `.activity-mobile-msg` shown (drag-and-drop requires pointer events, not touch)
+- Song card, playlist header, hero modal all adjusted for narrow widths
 
 ---
 
@@ -175,9 +225,10 @@ On Spotlistr the user pastes the clipboard content to generate a Spotify / Apple
 **Activity — Build Your Skeleton:**
 - 7 drop zones: V1, Pre-Ch, Ch1, V2, Ch2, Bridge, Outro
 - 10 draggable phrase cards (e.g. "The drive home after the fight")
-- Pointer Events API drag-and-drop (works on touch/iOS)
+- Pointer Events API drag-and-drop (works on desktop; hidden on mobile — see Mobile Responsive Design)
 - Drag ghost is `position: fixed` to work under Reveal's CSS scale transform
 - Reset button clears all placements
+- On phones (≤640px): `.activity-view` is hidden; `.activity-mobile-msg` shows "Open on a laptop" prompt
 
 ---
 
