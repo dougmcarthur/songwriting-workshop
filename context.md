@@ -23,14 +23,24 @@ An interactive web slideshow for the **Pro Artist Series Songwriting Track** at 
 songwriting-workshop/
 ├── index.html              # Workshop 1
 ├── app.js                  # Workshop 1 logic
-├── workshop-theme.css      # Shared custom styles (linked by both workshops)
+├── workshop-theme.css      # Shared custom styles (linked by all workshops + hub)
 ├── style.css               # OLD — DO NOT LINK (causes iOS Safari compositing bug)
 ├── context.md              # This file
+├── hub/
+│   └── index.html          # Class hub — sidebar + cards linking to all 4 decks (standalone, no Reveal)
 └── workshops/
-    └── w2/
-        ├── index.html      # Workshop 2
-        └── app.js          # Workshop 2 logic
+    ├── w2/
+    │   ├── index.html      # Workshop 2
+    │   └── app.js          # Workshop 2 logic
+    ├── w3/
+    │   ├── index.html      # Workshop 3
+    │   └── app.js          # Workshop 3 logic
+    └── w4/
+        ├── index.html      # Workshop 4
+        └── app.js          # Workshop 4 logic
 ```
+
+**Hub page** (`/hub/`): Self-contained dashboard (own `<style>` block, not Reveal-based) listing all 4 classes with dates and topic names — sidebar nav + class cards, both linking to `/`, `/workshops/w2/`, `/workshops/w3/`, `/workshops/w4/`.
 
 ---
 
@@ -185,6 +195,21 @@ The activity slide is built by `buildActivity(section)` (separate DOM approach, 
 | `playlist` | Same as W1 playlist |
 | `activity` | Built by `buildActivity()` — zoom-in map text inputs |
 
+### Slide types (W3)
+
+| Type | Description |
+|------|-------------|
+| `title`, `hook`, `comparison`, `contrast`, `casestudy`, `thesis`, `playlist` | Same renderers as W1/W2 |
+| `clichetable` | New type — 3-col table (Retire this / Why it fails / Try asking instead), reuses `.table-wrap` |
+| `activity` | Built by `buildActivity()` — The Rewrite Game (click-based, see below) |
+
+### Slide types (W4)
+
+| Type | Description |
+|------|-------------|
+| `title`, `hook`, `comparison`, `casestudy`, `thesis`, `playlist` | Same renderers as W1/W2 |
+| `activity` | Built by `buildActivity()` — The Assembly Session (stage sprint board with timer, see below) |
+
 ---
 
 ## Song Overlay
@@ -244,23 +269,41 @@ On Spotlistr the user pastes the clipboard content to generate a Spotify / Apple
 
 ---
 
-## Workshops 3–4 (Curriculum Planned, Not Yet Built)
-
-### Workshop 3: What Do You Sound Like?
+## Workshop 3: What Do You Sound Like?
 *Voice, Language & Lyric*
-- Writing *about* vs. writing *from inside*. Plain vs. poetic language. The cliché ban.
-- Activity: The Rewrite Game — write a verse in clichés, rewrite it to be specific and weird
 
-### Workshop 4: How Do You Finish Anything?
+**Songs:** A Case of You (Joni Mitchell, 1971 — case study), Visions of Johanna (Bob Dylan, 1966), Tangled Up in Blue (Bob Dylan, 1975), Skinny Love (Bon Iver, 2007), Linger (The Cranberries, 1993)
+
+Writing *about* vs. writing *from inside*. Cliché vs. specific. A "Five Lines Worth Retiring" table (`clichetable` slide type). Case study on Joni Mitchell's hyper-specific imagery.
+
+**Activity — The Rewrite Game:**
+- Pick a clichéd line from a pool of 8 cards (e.g. "My heart is broken in two")
+- Rewrite it from inside in a textarea
+- 8 "specificity prompt" chips (e.g. "A smell from that time") — click to insert a `[prompt: ]` cue into the rewrite
+- Click-based (not drag-and-drop) — works on touch devices, so it is **shown** on mobile (uses `.touch-activity` modifier class to override the W1 "hide on mobile" rule)
+- Reset button clears selection, textarea, and used-chip states
+
+---
+
+## Workshop 4: How Do You Finish Anything?
 *From Fragment to Song*
-- Finishing is a skill. The Minimum Viable Draft.
-- Activity: The Assembly Session — structured sprint (15 min verse / 15 min chorus / 10 min bridge / 5 min read aloud)
+
+**Songs:** Yesterday (The Beatles, 1965 — case study), Hallelujah (Leonard Cohen, 1984), Blackbird (The Beatles, 1968), Africa (Toto, 1982), Don't Stop Believin' (Journey, 1981)
+
+Reframes "I'm not feeling it" as fear of finishing. Defines the Minimum Viable Draft (a complete, rough structure beats a polished fragment). Case study: McCartney finished "Yesterday"'s melody with placeholder "Scrambled Eggs" lyrics to hold its shape.
+
+**Activity — The Assembly Session:**
+- 4-stage sprint board: Verse (15 min) → Chorus (15 min) → Bridge (10 min) → Read Aloud (5 min)
+- Each stage shows a prompt, a live mm:ss countdown timer (Start/Pause), and a textarea (Read Aloud stage shows a no-writing note instead)
+- Stage pills along the top act as a tracker — click to jump to any stage; `← Back` / `Next Stage →` for linear navigation
+- Click-based — also uses `.touch-activity` to stay visible on mobile
+- Reset stops the timer, clears all textareas, and returns to stage 1
+- State stored in module-level `assembly` object; `assembly.root` holds a reference to the activity's wrapper element so DOM queries work even before the section is appended to the document (the render function runs synchronously during `buildActivity()`, before `buildSlides()` appends the `<section>`)
 
 ---
 
 ## Pending / Future Work
 
-- **Workshops 3 and 4** — Curriculum defined above, slides not yet built
 - **Real-time student sync** — Stretch goal: students see each other's activity responses live. Would require Cloudflare Workers + D1
 - **Artist/album images** — Evidence cards use coloured gradient placeholders. Framework is in place (`.evidence-card-art` div); real images could be added via an `art` URL field in `SONGS`
 
