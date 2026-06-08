@@ -1302,6 +1302,28 @@ body,
   border-radius: 6px;
 }
 
+.assembly-complete-banner {
+  flex-shrink: 0;
+  padding: 12px 16px;
+  border: 1px solid rgba(80,210,130,0.35);
+  border-radius: 8px;
+  background: rgba(80,210,130,0.08);
+}
+
+.assembly-complete-headline {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.74em;
+  color: #8fe0ab;
+}
+
+.assembly-complete-sub {
+  font-size: 0.6em;
+  opacity: 0.65;
+  margin-top: 3px;
+  line-height: 1.4;
+}
+
 .assembly-nav {
   display: flex;
   justify-content: space-between;
@@ -1492,7 +1514,11 @@ body,
     display: none;
   }
 
-  /* ── Slide 7 (case study): tighten paragraph spacing ── */
+  /* ── Slide 7 (case study): tighten paragraph spacing ──
+     W1 wraps body in <div class="casestudy-body"><p>...</p></div>;
+     W2/W3/W4 put the class directly on a single <p class="casestudy-body">.
+     Cover both shapes. ── */
+  .casestudy-body,
   .casestudy-body p {
     margin-top: 0.2em !important;
     line-height: 1.5 !important;

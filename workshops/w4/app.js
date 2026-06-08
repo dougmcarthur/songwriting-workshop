@@ -432,6 +432,8 @@ const assembly = {
   remaining: 0,
   running: false,
   timerId: null,
+  drafts: {},
+  finished: false,
 };
 
 function buildActivity(section) {
@@ -469,6 +471,10 @@ function buildActivity(section) {
           </div>
         </div>
         <div id="assembly-input-wrap"></div>
+        <div class="assembly-complete-banner" id="assembly-complete-banner" hidden>
+          <div class="assembly-complete-headline">That's a finished Minimum Viable Draft.</div>
+          <div class="assembly-complete-sub">Verse, chorus, bridge, read-through — start to finish. Hit Reset to run the sprint again.</div>
+        </div>
         <div class="assembly-nav">
           <button class="assembly-nav-btn" id="assembly-back">&larr; Back</button>
           <button class="assembly-nav-btn assembly-nav-btn-primary" id="assembly-next">Next Stage &rarr;</button>
@@ -481,7 +487,13 @@ function buildActivity(section) {
 
   wrap.querySelector('#reset-btn').addEventListener('click', resetActivity);
   wrap.querySelector('#assembly-back').addEventListener('click', () => goToStage(assembly.stage - 1));
-  wrap.querySelector('#assembly-next').addEventListener('click', () => goToStage(assembly.stage + 1));
+  wrap.querySelector('#assembly-next').addEventListener('click', () => {
+    if (assembly.stage === ASSEMBLY_STAGES.length - 1) {
+      finishAssembly();
+    } else {
+      goToStage(assembly.stage + 1);
+    }
+  });
   wrap.querySelector('#assembly-timer-btn').addEventListener('click', toggleAssemblyTimer);
 
   wrap.querySelectorAll('.assembly-stage-pill').forEach(pill => {
@@ -507,15 +519,24 @@ function renderAssemblyStage() {
   const inputWrap = root.querySelector('#assembly-input-wrap');
   if (stage.hasInput) {
     inputWrap.innerHTML = `<textarea class="assembly-input" id="assembly-input-${stage.id}" placeholder="${esc(stage.placeholder)}" rows="6"></textarea>`;
+    const textarea = inputWrap.querySelector('textarea');
+    textarea.value = assembly.drafts[stage.id] || '';
+    textarea.addEventListener('input', () => { assembly.drafts[stage.id] = textarea.value; });
   } else {
     inputWrap.innerHTML = `<div class="assembly-readaloud-note">${esc(stage.note)}</div>`;
   }
 
+  const banner = root.querySelector('#assembly-complete-banner');
+  banner.hidden = true;
+
   root.querySelector('#assembly-back').disabled = assembly.stage === 0;
-  root.querySelector('#assembly-next').textContent = assembly.stage === ASSEMBLY_STAGES.length - 1
+  const nextBtn = root.querySelector('#assembly-next');
+  nextBtn.disabled = false;
+  nextBtn.textContent = assembly.stage === ASSEMBLY_STAGES.length - 1
     ? 'Done — Finish'
     : 'Next Stage →';
 
+  assembly.finished = false;
   stopAssemblyTimer();
   assembly.remaining = stage.minutes * 60;
   updateAssemblyTimerDisplay();
@@ -523,8 +544,18 @@ function renderAssemblyStage() {
 
 function goToStage(index) {
   if (index < 0 || index >= ASSEMBLY_STAGES.length) return;
+  if (index === assembly.stage) return;
   assembly.stage = index;
   renderAssemblyStage();
+}
+
+function finishAssembly() {
+  if (assembly.finished) return;
+  assembly.finished = true;
+  stopAssemblyTimer();
+  const root = assembly.root;
+  root.querySelector('#assembly-complete-banner').hidden = false;
+  root.querySelector('#assembly-next').disabled = true;
 }
 
 function toggleAssemblyTimer() {
@@ -570,10 +601,8 @@ function updateAssemblyTimerDisplay() {
 function resetActivity() {
   stopAssemblyTimer();
   assembly.stage = 0;
-  ASSEMBLY_STAGES.forEach(s => {
-    const input = assembly.root.querySelector(`#assembly-input-${s.id}`);
-    if (input) input.value = '';
-  });
+  assembly.drafts = {};
+  assembly.finished = false;
   renderAssemblyStage();
 }
 
