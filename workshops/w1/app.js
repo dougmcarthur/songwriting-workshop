@@ -638,7 +638,7 @@ function renderSlide(slide, index) {
       return `
         <div class="instructor-slide">
           <div class="instructor-photo-ring">
-            <img class="instructor-photo" src="https://gravatar.com/avatar/52f4160bb4d0dbba6ee65ba1be0ffa2e1bbc46971e5cbfb4e9fc62a3a29b7614?v=1774738651000&size=256&d=initials" alt="Doug McArthur" onerror="this.style.opacity='0'">
+            <img class="instructor-photo" src="../../assets/doug-square.jpg" alt="Doug McArthur" onerror="this.style.opacity='0'">
             <span class="instructor-initials">DM</span>
           </div>
           <div class="instructor-text">
