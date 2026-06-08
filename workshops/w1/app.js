@@ -646,7 +646,7 @@ function renderSlide(slide, index) {
             <h2 class="instructor-name">Doug McArthur</h2>
             <p class="instructor-title-line">Singer-songwriter &middot; Winnipeg, MB</p>
             <ul class="instructor-highlights">
-              <li><strong>Broken Halo</strong> &mdash; Won Power 97 Winnipeg&rsquo;s Class of 2010 with &ldquo;Rooftops&rdquo;; opened for Disturbed &amp; Avenged Sevenfold at MTS Centre</li>
+              <li><strong>Broken Halo</strong> &mdash; Won Power 97 Winnipeg&rsquo;s Class of 2010 with &ldquo;Rooftops&rdquo;</li>
               <li><strong>Soapbox</strong> &mdash; Alt-rock five-piece, Western Canada (2015)</li>
               <li><strong>Solo</strong> &mdash; &ldquo;Hermit Phase&rdquo; (2023) &middot; &ldquo;Magic&rdquo; (2025) &mdash; Power 97 airplay, Manitoba Music Song of the Week</li>
               <li><strong>Sun Dogs</strong> &mdash; Bi-monthly songwriter showcase at The Handsome Daughter</li>
