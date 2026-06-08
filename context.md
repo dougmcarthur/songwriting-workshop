@@ -9,8 +9,11 @@ An interactive web slideshow for the **Pro Artist Series Songwriting Track** at 
 ## Deployment
 
 - **Repo:** `dougmcarthur/songwriting-workshop` (GitHub)
-- **Live site:** https://songwriting-workshop.pages.dev
+- **Live site (hub):** https://songwriting-workshop.pages.dev
+- **Workshop 1:** https://songwriting-workshop.pages.dev/workshops/w1/
 - **Workshop 2:** https://songwriting-workshop.pages.dev/workshops/w2/
+- **Workshop 3:** https://songwriting-workshop.pages.dev/workshops/w3/
+- **Workshop 4:** https://songwriting-workshop.pages.dev/workshops/w4/
 - **Hosting:** Cloudflare Pages — auto-deploys on every push to `main`
 - **Branch policy:** Always push directly to `main`
 - **Stack:** Vanilla HTML/CSS/JS + Reveal.js 5.1.0 via CDN, no build step, no npm
@@ -21,14 +24,14 @@ An interactive web slideshow for the **Pro Artist Series Songwriting Track** at 
 
 ```
 songwriting-workshop/
-├── index.html              # Workshop 1
-├── app.js                  # Workshop 1 logic
+├── index.html              # Class hub — sidebar + cards linking to all 4 decks (standalone, no Reveal)
 ├── workshop-theme.css      # Shared custom styles (linked by all workshops + hub)
 ├── style.css               # OLD — DO NOT LINK (causes iOS Safari compositing bug)
 ├── context.md              # This file
-├── hub/
-│   └── index.html          # Class hub — sidebar + cards linking to all 4 decks (standalone, no Reveal)
 └── workshops/
+    ├── w1/
+    │   ├── index.html      # Workshop 1
+    │   └── app.js          # Workshop 1 logic
     ├── w2/
     │   ├── index.html      # Workshop 2
     │   └── app.js          # Workshop 2 logic
@@ -40,7 +43,7 @@ songwriting-workshop/
         └── app.js          # Workshop 4 logic
 ```
 
-**Hub page** (`/hub/`): Self-contained dashboard (own `<style>` block, not Reveal-based) listing all 4 classes with dates and topic names — sidebar nav + class cards, both linking to `/`, `/workshops/w2/`, `/workshops/w3/`, `/workshops/w4/`.
+**Hub page** (`/`): Self-contained dashboard (own `<style>` block, not Reveal-based) listing all 4 classes with dates and topic names — sidebar nav + class cards, both linking to `/workshops/w1/`, `/workshops/w2/`, `/workshops/w3/`, `/workshops/w4/`.
 
 ---
 
@@ -48,7 +51,7 @@ songwriting-workshop/
 
 ### Reveal.js 5.1.0
 
-Both workshops use identical HTML structure:
+All four workshops use identical HTML structure:
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -57,10 +60,10 @@ Both workshops use identical HTML structure:
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reset.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/reveal.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js@5.1.0/dist/theme/black.css">
-<link rel="stylesheet" href="workshop-theme.css">   <!-- ../../workshop-theme.css for w2 -->
+<link rel="stylesheet" href="../../workshop-theme.css">
 ```
 
-**Reveal init config — both workshops use identical values (do not change without testing on iOS Safari):**
+**Reveal init config — all four workshops use identical values (do not change without testing on iOS Safari):**
 ```js
 Reveal.initialize({
   hash: true,
@@ -94,7 +97,7 @@ body, .reveal-viewport { background: var(--bg) !important; }
 
 ### CSS architecture
 
-`workshop-theme.css` (shared, in root, `../../workshop-theme.css` from w2):
+`workshop-theme.css` (shared, lives in repo root, linked as `../../workshop-theme.css` from each `workshops/wN/`):
 - Typography overrides (Poppins headings, DM Sans body, no uppercase, tight kerning)
 - Table styles: no border lines, alternating row tints at 4% white opacity
 - `.song-link` base: no underline, no border/bg, hover opacity
@@ -325,8 +328,11 @@ Reframes "I'm not feeling it" as fear of finishing. Defines the Minimum Viable D
 
 ## Key Links
 
-- Live site: https://songwriting-workshop.pages.dev
+- Live site (hub): https://songwriting-workshop.pages.dev
+- Workshop 1: https://songwriting-workshop.pages.dev/workshops/w1/
 - Workshop 2: https://songwriting-workshop.pages.dev/workshops/w2/
+- Workshop 3: https://songwriting-workshop.pages.dev/workshops/w3/
+- Workshop 4: https://songwriting-workshop.pages.dev/workshops/w4/
 - Repo: https://github.com/dougmcarthur/songwriting-workshop
 - Program page: https://goodskystudio.com/the-pro-artist-series/
 - Studio site: https://goodskystudio.com
