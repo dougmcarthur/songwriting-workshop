@@ -105,6 +105,19 @@ const SLIDES = [
     type: 'instructor',
   },
   {
+    id: 'sundogs',
+    type: 'sundogs',
+    eyebrow: 'Building community',
+    headline: 'Sun Dogs Music Manitoba',
+    intro: 'Outside the studio, Doug runs Sun Dogs Music Manitoba — a home base for Manitoba songwriters to share work, get feedback, and grow together.',
+    cards: [
+      { num: '01', title: 'Songwriter Showcases', desc: 'Bi-monthly nights at The Handsome Daughter where local writers perform new and unfinished work for a room that gets it.' },
+      { num: '02', title: 'Songwriting Retreats', desc: 'Weekend writing retreats on Lake of the Woods — time, space, and company to actually finish songs.' },
+      { num: '03', title: 'Co-Writing Sessions', desc: 'Pairing writers up to trade ideas, work through drafts, and learn from each other’s process.' },
+      { num: '04', title: 'Community Choir', desc: 'The One-Day Choir at The Forks: strangers learn a song together in an afternoon and perform it that same night.' },
+    ],
+  },
+  {
     id: 'housekeeping',
     type: 'housekeeping',
   },
@@ -634,27 +647,65 @@ function renderSlide(slide, index) {
         </div>
       `;
 
-    case 'instructor':
-      return `
-        <div class="instructor-slide">
-          <div class="instructor-photo-ring">
-            <img class="instructor-photo" src="../../assets/doug-square.jpg" alt="Doug McArthur" onerror="this.style.opacity='0'">
-            <span class="instructor-initials">DM</span>
-          </div>
-          <div class="instructor-text">
-            <p class="instructor-eyebrow">Your instructor</p>
-            <h2 class="instructor-name">Doug McArthur</h2>
-            <p class="instructor-title-line">Singer-songwriter &middot; Winnipeg, MB</p>
-            <ul class="instructor-highlights">
-              <li><strong>Broken Halo</strong> &mdash; Won Power 97 Winnipeg&rsquo;s Class of 2010 with &ldquo;Rooftops&rdquo;</li>
-              <li><strong>Soapbox</strong> &mdash; Alt-rock five-piece, Western Canada (2015)</li>
-              <li><strong>Solo</strong> &mdash; &ldquo;Hermit Phase&rdquo; (2023) &middot; &ldquo;Magic&rdquo; (2025) &mdash; Power 97 airplay, Manitoba Music Song of the Week</li>
-              <li><strong>Sun Dogs</strong> &mdash; Bi-monthly songwriter showcase at The Handsome Daughter</li>
-              <li><strong>Community</strong> &mdash; Songwriting retreats on Lake of the Woods &middot; One-Day Choir at The Forks</li>
-            </ul>
+    case 'instructor': {
+      const ALBUMS = [
+        { title: 'Broken Halo', sub: 'Broken Halo &middot; 2007', art: 'https://f4.bcbits.com/img/a0268411194_16.jpg' },
+        { title: 'Broken Halo', sub: 'Stars Align &middot; 2009', art: 'https://f4.bcbits.com/img/a0928103950_16.jpg' },
+        { title: 'Soapbox', sub: 'Soapbox &middot; 2015', art: 'https://f4.bcbits.com/img/a2485934355_1x1_700.jpg' },
+        { title: 'Doug McArthur', sub: 'Draw the Line EP &middot; 2024', art: 'https://f4.bcbits.com/img/a3513307816_16.jpg' },
+        { title: 'Doug McArthur', sub: 'Magic &middot; 2025', art: 'https://f4.bcbits.com/img/a1293669697_1x1_700.jpg' },
+        { title: 'Doug McArthur', sub: 'Lost Weekends &middot; 2026', art: 'https://f4.bcbits.com/img/a2544305617_1x1_700.jpg' },
+      ];
+      const albumCards = ALBUMS.map(a => `
+        <div class="discog-card">
+          <img class="discog-art" src="${a.art}" alt="${esc(a.title)} &mdash; ${a.sub.replace(/&middot;.*/, '').trim()}" loading="lazy">
+          <div class="discog-meta">
+            <div class="discog-title">${esc(a.title)}</div>
+            <div class="discog-sub">${a.sub}</div>
           </div>
         </div>
+      `).join('');
+      return `
+        <div class="instructor-slide">
+          <div class="instructor-header">
+            <div class="instructor-photo-ring">
+              <img class="instructor-photo" src="../../assets/doug-square.jpg" alt="Doug McArthur" onerror="this.style.opacity='0'">
+              <span class="instructor-initials">DM</span>
+            </div>
+            <div class="instructor-text">
+              <p class="instructor-eyebrow">Your instructor</p>
+              <h2 class="instructor-name">Doug McArthur</h2>
+              <p class="instructor-title-line">Singer-songwriter &middot; Winnipeg, MB &middot; Broken Halo &middot; Soapbox &middot; Sun Dogs Music Manitoba</p>
+            </div>
+          </div>
+
+          <div class="instructor-stats">
+            <div class="instructor-stat"><div class="instructor-stat-num">40+</div><div class="instructor-stat-label">Songs released</div></div>
+            <div class="instructor-stat"><div class="instructor-stat-num">3</div><div class="instructor-stat-label">Awards &amp; honors</div></div>
+            <div class="instructor-stat"><div class="instructor-stat-num">15+</div><div class="instructor-stat-label">Years active</div></div>
+            <div class="instructor-stat"><div class="instructor-stat-num">500+</div><div class="instructor-stat-label">Shows played</div></div>
+          </div>
+
+          <div class="instructor-discog">${albumCards}</div>
+        </div>
       `;
+    }
+
+    case 'sundogs': {
+      const cards = slide.cards.map(c => `
+        <div class="sundogs-card">
+          <div class="sundogs-card-num">${esc(c.num)}</div>
+          <div class="sundogs-card-title">${esc(c.title)}</div>
+          <div class="sundogs-card-desc">${esc(c.desc)}</div>
+        </div>
+      `).join('');
+      return `
+        ${ey}
+        <h2>${esc(slide.headline)}</h2>
+        <p class="sundogs-intro">${esc(slide.intro)}</p>
+        <div class="sundogs-grid">${cards}</div>
+      `;
+    }
 
     case 'housekeeping': {
       const classes = [

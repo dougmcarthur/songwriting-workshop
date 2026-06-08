@@ -848,9 +848,15 @@ body,
 
 .instructor-slide {
   display: flex;
-  gap: 2.2em;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 1em;
   text-align: left;
+}
+
+.instructor-header {
+  display: flex;
+  gap: 1.6em;
+  align-items: center;
 }
 
 .instructor-photo-ring {
@@ -911,20 +917,124 @@ body,
   margin: 0 0 0.8em;
 }
 
-.instructor-highlights {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+/* ── Stat cards ───────────────────────────────────────────────────── */
+
+.instructor-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.7em;
+}
+
+.instructor-stat {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  border-radius: 10px;
+  padding: 0.7em 0.6em;
+  text-align: center;
+}
+
+.instructor-stat-num {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 1.5em;
+  letter-spacing: -0.02em;
+  color: #7BA7D4;
+}
+
+.instructor-stat-label {
+  font-size: 0.5em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  opacity: 0.55;
+  margin-top: 0.25em;
+}
+
+/* ── Discography grid ─────────────────────────────────────────────── */
+
+.instructor-discog {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.6em;
+}
+
+.discog-card {
+  display: flex;
+  flex-direction: column;
+  border-radius: 8px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+}
+
+.discog-art {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  margin: 0 !important;
+}
+
+.discog-meta {
+  padding: 0.45em 0.55em 0.55em;
+}
+
+.discog-title {
+  font-size: 0.46em;
+  font-weight: 700;
+  line-height: 1.25;
+}
+
+.discog-sub {
+  font-size: 0.4em;
+  opacity: 0.55;
+  margin-top: 0.1em;
+}
+
+/* ── Sun Dogs Music Manitoba slide ────────────────────────────────── */
+
+.sundogs-intro {
+  font-size: 0.62em;
+  opacity: 0.7;
+  max-width: 46em;
+  line-height: 1.55;
+  margin: 0.3em 0 1em;
+}
+
+.sundogs-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.9em;
+}
+
+.sundogs-card {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  padding: 1em 1.2em;
+}
+
+.sundogs-card-num {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.6em;
+  letter-spacing: 0.05em;
+  color: #7BA7D4;
+  opacity: 0.8;
+}
+
+.sundogs-card-title {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 700;
+  font-size: 0.85em;
+  letter-spacing: -0.01em;
+  margin: 0.25em 0 0.35em;
+}
+
+.sundogs-card-desc {
   font-size: 0.56em;
-  line-height: 1.5;
+  opacity: 0.65;
+  line-height: 1.55;
 }
-
-.instructor-highlights li {
-  padding: 0.3em 0;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-}
-
-.instructor-highlights li:last-child { border-bottom: none; }
 
 /* ─── Housekeeping slide ─────────────────────────────────────────────────────── */
 
@@ -1569,10 +1679,14 @@ body,
   .title-headline { font-size: 1.8em !important; }
 
   /* ── Instructor slide ── */
-  .instructor-slide { flex-direction: column; align-items: center; text-align: center; }
+  .instructor-header { flex-direction: column; text-align: center; }
   .instructor-photo-ring { width: 110px; height: 110px; }
   .instructor-initials { font-size: 2.2em; }
-  .instructor-highlights { text-align: left; }
+  .instructor-stats { grid-template-columns: repeat(2, 1fr); }
+  .instructor-discog { grid-template-columns: repeat(3, 1fr); }
+
+  /* ── Sun Dogs Music Manitoba slide ── */
+  .sundogs-grid { grid-template-columns: 1fr; }
 
   /* ── Housekeeping slide ── */
   .housekeeping-headline { font-size: 1.3em !important; }
