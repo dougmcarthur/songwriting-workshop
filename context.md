@@ -127,7 +127,8 @@ Reveal.js scales the entire slide canvas via `transform: scale()`. This means in
 | `.eras-grid` | Era grid wrapper | W1 `app.js` eras case |
 | `.table-wrap` | Wrapper around structures table | W1 `app.js` table case |
 | `.evidence-answer` | "No." paragraph | W1 `app.js` evidence case |
-| `.casestudy-body` | Body paragraph wrapper | W1 `app.js` casestudy case |
+| `.casestudy-body` | Body paragraph wrapper | All 4 decks' `app.js` casestudy case |
+| `.casestudy-quote` | Pull-quote paragraph (one `\n\n`-delimited paragraph, matched via slide's `quote` field) | All 4 decks' `app.js` casestudy case |
 | `.comparison-grid` | Comparison slide grid | W2 `app.js` comparison case |
 | `.contrast-grid` | Contrast slide grid | W2 `app.js` contrast case |
 
@@ -152,7 +153,7 @@ Reveal.js scales the entire slide canvas via `transform: scale()`. This means in
 - Structures table: last (Example) column hidden — can't scroll inside Reveal section
 - Slide 3 eras: gap/padding/margins tightened so 3 cards fit
 - Slide 5 evidence: art height 36px, card notes hidden, "No." shrunk to 1.2em
-- Slide 7 case study: body `<p>` margin-top 0.2em (body is split `<p>` elements, not `<br><br>`)
+- Slide 7 case study: body `<p>` margin-top 0.2em (body is split `<p>` elements, not `<br><br>`); `.casestudy-quote` shrinks to 0.8em with tighter margin
 - Slide 9 activity: `.activity-view` hidden, `.activity-mobile-msg` shown (drag-and-drop requires pointer events, not touch)
 - Song card, playlist header, hero modal all adjusted for narrow widths
 
@@ -179,7 +180,7 @@ The activity slide is built by `buildActivity(section)` (separate DOM approach, 
 | `table` | Alternatives table — subtle alternating rows, no bold borders |
 | `evidence` | Headline + big "No." answer + 3-card grid with coloured art headers |
 | `hero` | Hero's Journey parallel table |
-| `casestudy` | Headline + subhead + body text (0.65em, line-height 1.65) + listen button |
+| `casestudy` | Headline + subhead + body text (0.65em, line-height 1.65) + listen button. Body is split on `\n\n` into paragraphs; if a slide has a `quote` field matching one paragraph exactly, that paragraph renders as a styled pull-quote (`.casestudy-quote`) instead |
 | `thesis` | Two-line split headline (line 1 dim, line 2 full), small cue below |
 | `playlist` | Streaming-service numbered table + green "Create Playlist" button |
 | `activity` | Built by `buildActivity()` — drag-and-drop skeleton builder |
@@ -302,6 +303,17 @@ Reframes "I'm not feeling it" as fear of finishing. Defines the Minimum Viable D
 - Click-based — also uses `.touch-activity` to stay visible on mobile
 - Reset stops the timer, clears all textareas, and returns to stage 1
 - State stored in module-level `assembly` object; `assembly.root` holds a reference to the activity's wrapper element so DOM queries work even before the section is appended to the document (the render function runs synchronously during `buildActivity()`, before `buildSlides()` appends the `<section>`)
+
+---
+
+## Changelog
+
+### 2026-06-22
+
+- **Case-study pull-quote treatment** added across all 4 decks. Each casestudy slide can set a `quote` field (exact text of one `\n\n`-delimited body paragraph); the render function splits `body` on `\n\n` and renders the matching paragraph as `<p class="casestudy-quote">` (bold `var(--font-head)`, accent-color `#7BA7D4` left border) instead of the default inline-styled paragraph. W2/W3/W4 were also unified onto W1's div-wrapper render pattern (`<div class="casestudy-body">...</div>`), replacing their old single-`<p>`/`nl()` approach. For W3 (Joni Mitchell) and W4 (Beatles), the pull-quote always targets Doug's own analytical sentence, never the quoted lyric line itself, to stay copyright-safe.
+- **W1 housekeeping headline** fixed: "A few things." → "A few things before we start."
+- **W1 "Build Your Skeleton" activity** — the 10 draggable `CARDS` phrases were rewritten so any subset/order a student drags still reads as a coherent narrative (a relationship-ending arc), rather than disconnected lines.
+- Considered but **not implemented**: trimming note lines on comparison/contrast slides and card note tiers (zoom levels) — judged to be useful payoff content, not clutter; consolidating low-tier opacity values site-wide — carries visual-regression risk without screenshot verification tooling.
 
 ---
 
