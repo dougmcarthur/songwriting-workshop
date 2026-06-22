@@ -133,6 +133,9 @@ body,
   grid-template-columns: repeat(3, 1fr);
   gap: 0.9em;
   margin: 0.2em 0;
+  /* Inset the grid so the three cards read as upright panels rather than
+     wide, squat landscape boxes on a full-width slide. */
+  padding: 0 15%;
 }
 
 .evidence-card {
@@ -146,7 +149,7 @@ body,
 }
 
 .evidence-card-art {
-  height: 72px;
+  height: 180px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1641,6 +1644,7 @@ body,
 
   .evidence-grid {
     gap: 0.35em;
+    padding: 0;   /* full-width single column on phones */
   }
 
   .evidence-card-art {
