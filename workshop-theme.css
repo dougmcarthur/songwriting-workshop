@@ -128,16 +128,17 @@ body,
 }
 
 /* ─── Evidence cards ─────────────────────────────────────────────────────────── */
+/* Three stacked rows, centered. max-width clamps to full width on narrow
+   canvases, so no per-breakpoint inset is needed. */
 .evidence-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0.9em;
-  margin: 0.2em 0;
-  /* Inset the grid so the three cards read as upright panels rather than
-     wide, squat landscape boxes on a full-width slide. */
-  padding: 0 15%;
+  grid-template-columns: 1fr;
+  gap: 0.55em;
+  margin: 0.4em auto 0;
+  max-width: 760px;
 }
 
+/* Each card is a horizontal row: colour thumbnail left, text right. */
 .evidence-card {
   background: rgba(255,255,255,0.05);
   border: 1px solid var(--border);
@@ -145,21 +146,25 @@ body,
   overflow: hidden;
   text-align: left;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  align-items: stretch;
 }
 
 .evidence-card-art {
-  height: 180px;
+  width: 110px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.4em;
+  font-size: 2em;
   flex-shrink: 0;
 }
 
 .evidence-card-body {
-  padding: 0.6em 0.8em 0.75em;
+  padding: 0.6em 1em;
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 .evidence-card-title {
@@ -1512,21 +1517,9 @@ body,
 /* Note: media queries fire on actual viewport px, not the Reveal-scaled canvas.  */
 /* Slide canvas = 90% of viewport, so breakpoints intentionally exceed canvas px. */
 
-/* ── Narrow desktop / iPad (≤ 1366px) ────────────────────────────────────────── */
-/* The 15% evidence-grid inset is tuned for wide screens; on smaller canvases it
-   squeezes the 3 cards until titles clip. Ease it off so they keep their room. */
-@media (max-width: 1366px) {
-  .evidence-grid {
-    padding: 0 7%;
-  }
-}
-
 /* ── Tablet portrait (≤ 900px viewport → ≤ 810px canvas) ─────────────────────── */
 @media (max-width: 900px) {
-  /* 3-col evidence grid → 2 columns */
-  .evidence-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  /* (Evidence cards are stacked rows at every width — no column override.) */
 
   /* Hero modal card: remove fixed min-width that overflows phone screens */
   .hero-overlay .hero-card {
@@ -1585,7 +1578,6 @@ body,
   }
 
   /* All multi-column grids → single column */
-  .evidence-grid,
   .eras-grid,
   .comparison-grid {
     grid-template-columns: 1fr !important;
@@ -1645,7 +1637,7 @@ body,
     margin-bottom: 0.1em !important;
   }
 
-  /* ── Slide 5 (evidence): reduce art height + hide notes, shrink "No." ── */
+  /* ── Slide 5 (evidence): narrower thumbnail, shrink "No." ── */
   .evidence-answer {
     font-size: 1.2em !important;
     margin: 0.05em 0 0.2em !important;
@@ -1653,16 +1645,15 @@ body,
 
   .evidence-grid {
     gap: 0.35em;
-    padding: 0;   /* full-width single column on phones */
   }
 
   .evidence-card-art {
-    height: 36px;
+    width: 64px;
     font-size: 1.4em;
   }
 
   .evidence-card-body {
-    padding: 0.3em 0.6em 0.35em;
+    padding: 0.4em 0.6em;
   }
 
   .evidence-card-title {
@@ -1670,12 +1661,7 @@ body,
   }
 
   .evidence-card-artist {
-    margin-bottom: 0;
-  }
-
-  /* Notes are the longest text in the card — hiding them saves ~55px per card */
-  .evidence-card-note {
-    display: none;
+    margin-bottom: 0.15em;
   }
 
   /* ── Slide 7 (case study): tighten paragraph spacing ── */
