@@ -128,6 +128,12 @@ body,
 }
 
 /* ─── Evidence cards ─────────────────────────────────────────────────────────── */
+/* Smaller than the default h2 so the question doesn't dominate the slide and
+   the row stack has room. h2.evidence-headline (0,2,1) beats `.reveal h2`. */
+.reveal h2.evidence-headline {
+  font-size: 1.3em;
+}
+
 /* Three stacked rows, centered. max-width clamps to full width on narrow
    canvases, so no per-breakpoint inset is needed. */
 .evidence-grid {

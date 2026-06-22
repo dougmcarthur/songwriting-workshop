@@ -433,7 +433,7 @@ function renderSlide(slide, index) {
         `;
       }).join('');
       return `
-        <h2>${nl(slide.headline)}</h2>
+        <h2 class="evidence-headline">${nl(slide.headline)}</h2>
         <p class="evidence-answer" style="font-size:2em;font-weight:700;font-family:'Poppins',sans-serif;letter-spacing:-0.03em;margin:0.1em 0 0.4em">${esc(slide.answer)}</p>
         <div class="evidence-grid">${cards}</div>
         <p style="font-size:0.6em;opacity:0.55;margin-top:0.5em">${esc(slide.body)}</p>
