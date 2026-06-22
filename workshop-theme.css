@@ -1001,7 +1001,10 @@ body,
   opacity: 0.7;
   max-width: 46em;
   line-height: 1.55;
-  margin: 0.3em auto 1em;
+  /* auto needs !important to beat Reveal core's `.reveal p { margin: … 0 }`
+     (specificity 0,1,1) which otherwise forces horizontal margin to 0 and
+     pins this max-width box to the left of the centered slide. */
+  margin: 0.3em auto 1em !important;
 }
 
 .sundogs-grid {
