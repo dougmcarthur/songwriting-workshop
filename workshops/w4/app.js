@@ -212,7 +212,7 @@ function renderSlide(slide, index) {
 
     case 'casestudy': {
       const listenBtn = slide.songId
-        ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
+        ? `<p style="margin-top:0.8em"><button class="song-link song-listen-btn" data-song="${slide.songId}">Listen to this song ↗</button></p>`
         : '';
       const bodyParas = slide.body.split('\n\n').map((para, pi) => {
         if (slide.quote && para.trim() === slide.quote.trim()) {
