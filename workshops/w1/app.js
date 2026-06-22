@@ -212,7 +212,8 @@ const SLIDES = [
     headline: '"Don\'t Dream\nIt\'s Over"',
     subhead: 'Crowded House, 1986',
     songId: 'dont-dream-its-over',
-    body: 'A Hero\'s Journey that refuses to complete.\n\nThe final chorus doesn\'t bring the hero home — it insists, almost desperately, that something good is still possible. The resolution never arrives.\n\nUnresolved for 40 years. Nobody\'s tired of it.',
+    body: 'A Hero\'s Journey that refuses to complete.\n\nThe final chorus doesn\'t bring the hero home — it insists, almost desperately, that something good is still possible.\n\nThe resolution never arrives.\n\nUnresolved for 40 years. Nobody\'s tired of it.',
+    quote: 'The resolution never arrives.',
   },
   {
     id: 'thesis',
@@ -239,15 +240,15 @@ const ZONES = [
 ];
 
 const CARDS = [
-  'The town we both swore we\'d leave',
+  'Packed the truck before sunrise',
   'Your boots still sitting by the door',
   '3am and I still can\'t sleep',
-  'Something\'s gotta give',
+  'Something in me left months ago',
   'We were gonna be alright',
-  'Please don\'t take what\'s mine',
+  'Called it temporary for two years',
   'I did this to myself',
-  'Everything I thought I knew',
-  'But I still believe it',
+  'Same house, a different kind of empty',
+  'Left before I ever packed a thing',
   'Same road, new kind of lost',
 ];
 
@@ -558,9 +559,12 @@ function renderSlide(slide, index) {
       const listenBtn = slide.songId
         ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
-      const bodyParas = slide.body.split('\n\n').map((para, pi) =>
-        `<p style="font-size:0.65em;line-height:1.65;margin-top:${pi === 0 ? '0.6em' : '0.5em'}">${nl(para)}</p>`
-      ).join('');
+      const bodyParas = slide.body.split('\n\n').map((para, pi) => {
+        if (slide.quote && para.trim() === slide.quote.trim()) {
+          return `<p class="casestudy-quote">${nl(para)}</p>`;
+        }
+        return `<p style="font-size:0.65em;line-height:1.65;margin-top:${pi === 0 ? '0.6em' : '0.5em'}">${nl(para)}</p>`;
+      }).join('');
       return `
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
@@ -691,7 +695,7 @@ function renderSlide(slide, index) {
         </li>`
       ).join('');
       return `
-        <h2 class="housekeeping-headline">A few things.</h2>
+        <h2 class="housekeeping-headline">A few things before we start.</h2>
         <div class="housekeeping-cols">
           <div class="housekeeping-col">
             <h3 class="hk-col-head">This Series</h3>

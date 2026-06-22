@@ -124,7 +124,8 @@ const SLIDES = [
     headline: '"Yesterday"',
     subhead: 'The Beatles, 1965 — written first as "Scrambled Eggs"',
     songId: 'yesterday',
-    body: 'Paul McCartney woke up one morning with the entire melody in his head — fully formed, like he\'d dreamed it. He was so sure he must have heard it somewhere that he played it for friends for weeks, asking, "Is this something? I couldn\'t have written it. I dreamed it."\n\nTo hold the melody\'s shape while he searched for real words, he sang nonsense to it: "Scrambled eggs, oh my baby how I love your legs." Placeholder lyrics. A song-shaped draft, finished in form, unfinished in content.\n\nThe real lyrics came weeks later, on a long drive to Portugal. "Yesterday" went on to become the most-covered song in recorded history — and it started as a complete shape with throwaway words inside it.',
+    body: 'Paul McCartney woke up one morning with the entire melody in his head — fully formed, like he\'d dreamed it. He was so sure he must have heard it somewhere that he played it for friends for weeks, asking, "Is this something? I couldn\'t have written it. I dreamed it."\n\nTo hold the melody\'s shape while he searched for real words, he sang nonsense to it: "Scrambled eggs, oh my baby how I love your legs."\n\nPlaceholder lyrics. A song-shaped draft, finished in form, unfinished in content.\n\nThe real lyrics came weeks later, on a long drive to Portugal. "Yesterday" went on to become the most-covered song in recorded history — and it started as a complete shape with throwaway words inside it.',
+    quote: 'Placeholder lyrics. A song-shaped draft, finished in form, unfinished in content.',
   },
   {
     id: 'thesis',
@@ -213,10 +214,16 @@ function renderSlide(slide, index) {
       const listenBtn = slide.songId
         ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
+      const bodyParas = slide.body.split('\n\n').map((para, pi) => {
+        if (slide.quote && para.trim() === slide.quote.trim()) {
+          return `<p class="casestudy-quote">${nl(para)}</p>`;
+        }
+        return `<p style="font-size:0.65em;line-height:1.65;margin-top:${pi === 0 ? '0.6em' : '0.5em'}">${nl(para)}</p>`;
+      }).join('');
       return `
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
-        <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em" class="casestudy-body">${nl(slide.body)}</p>
+        <div class="casestudy-body">${bodyParas}</div>
         ${listenBtn}
       `;
     }

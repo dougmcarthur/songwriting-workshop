@@ -149,7 +149,8 @@ const SLIDES = [
     headline: '"The River"',
     subhead: 'Bruce Springsteen, 1980',
     songId: 'the-river',
-    body: 'Topic: youth, lost dreams, regret.\nSubject: A specific couple. A specific summer. A specific river.\n\nVerse 1 alone: a graduation ceremony, a union card, a pregnant girlfriend, a borrowed wedding ring. Not "heartbreak." This heartbreak. Theirs. Yours.\n\n45 years later — still sounds like it\'s about you.',
+    body: 'Topic: youth, lost dreams, regret.\nSubject: A specific couple. A specific summer. A specific river.\n\nVerse 1 alone: a graduation ceremony, a union card, a pregnant girlfriend, a borrowed wedding ring.\n\nNot "heartbreak." This heartbreak. Theirs. Yours.\n\n45 years later — still sounds like it\'s about you.',
+    quote: 'Not "heartbreak." This heartbreak. Theirs. Yours.',
   },
   {
     id: 'thesis',
@@ -310,10 +311,16 @@ function renderSlide(slide, index) {
       const listenBtn = slide.songId
         ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
+      const bodyParas = slide.body.split('\n\n').map((para, pi) => {
+        if (slide.quote && para.trim() === slide.quote.trim()) {
+          return `<p class="casestudy-quote">${nl(para)}</p>`;
+        }
+        return `<p style="font-size:0.65em;line-height:1.65;margin-top:${pi === 0 ? '0.6em' : '0.5em'}">${nl(para)}</p>`;
+      }).join('');
       return `
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
-        <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em">${nl(slide.body)}</p>
+        <div class="casestudy-body">${bodyParas}</div>
         ${listenBtn}
       `;
     }

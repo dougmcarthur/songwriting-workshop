@@ -1471,6 +1471,17 @@ body,
 }
 .assembly-nav-btn-primary:hover { background: rgba(80,210,130,0.22); }
 
+/* ─── Case study pull-quote ──────────────────────────────────────────────────── */
+.casestudy-quote {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.85em !important;
+  line-height: 1.4 !important;
+  border-left: 3px solid #7BA7D4;
+  padding-left: 0.6em;
+  margin: 0.6em 0 !important;
+}
+
 /* ─── Responsive ─────────────────────────────────────────────────────────────── */
 /* Note: media queries fire on actual viewport px, not the Reveal-scaled canvas.  */
 /* Slide canvas = 90% of viewport, so breakpoints intentionally exceed canvas px. */
@@ -1631,14 +1642,15 @@ body,
     display: none;
   }
 
-  /* ── Slide 7 (case study): tighten paragraph spacing ──
-     W1 wraps body in <div class="casestudy-body"><p>...</p></div>;
-     W2/W3/W4 put the class directly on a single <p class="casestudy-body">.
-     Cover both shapes. ── */
-  .casestudy-body,
+  /* ── Slide 7 (case study): tighten paragraph spacing ── */
   .casestudy-body p {
     margin-top: 0.2em !important;
     line-height: 1.5 !important;
+  }
+
+  .casestudy-quote {
+    font-size: 0.8em !important;
+    margin: 0.4em 0 !important;
   }
 
   /* ── Slide 9 (activity): hide drag-and-drop, show desktop-only message ── */

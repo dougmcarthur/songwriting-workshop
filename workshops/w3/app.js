@@ -146,7 +146,8 @@ const SLIDES = [
     headline: '"A Case of You"',
     subhead: 'Joni Mitchell, 1971',
     songId: 'a-case-of-you',
-    body: 'Topic: love, longing, the way one person can take up all the space in you.\nSubject: A specific night, a specific bar, a drawing of the Northern Lights on a napkin.\n\n"I could drink a case of you, darling, and still be on my feet" — devotion turned into something you can taste, measure, survive. Not "I love you so much." This much. Measured in cases.\n\nFifty years later, it still sounds like she\'s telling you a secret — because the details are too odd, too specific, to be anyone\'s but hers.',
+    body: 'Topic: love, longing, the way one person can take up all the space in you.\nSubject: A specific night, a specific bar, a drawing of the Northern Lights on a napkin.\n\n"I could drink a case of you, darling, and still be on my feet" — devotion turned into something you can taste, measure, survive.\n\nNot "I love you so much." This much. Measured in cases.\n\nFifty years later, it still sounds like she\'s telling you a secret — because the details are too odd, too specific, to be anyone\'s but hers.',
+    quote: 'Not "I love you so much." This much. Measured in cases.',
   },
   {
     id: 'thesis',
@@ -272,10 +273,16 @@ function renderSlide(slide, index) {
       const listenBtn = slide.songId
         ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
+      const bodyParas = slide.body.split('\n\n').map((para, pi) => {
+        if (slide.quote && para.trim() === slide.quote.trim()) {
+          return `<p class="casestudy-quote">${nl(para)}</p>`;
+        }
+        return `<p style="font-size:0.65em;line-height:1.65;margin-top:${pi === 0 ? '0.6em' : '0.5em'}">${nl(para)}</p>`;
+      }).join('');
       return `
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
-        <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em" class="casestudy-body">${nl(slide.body)}</p>
+        <div class="casestudy-body">${bodyParas}</div>
         ${listenBtn}
       `;
     }
