@@ -58,10 +58,10 @@ const SONGS = {
     artist: 'Johnny Cash',
     year: '2002',
   },
-  'alright': {
-    title: 'Alright',
-    artist: 'Kendrick Lamar',
-    year: '2015',
+  'elephant': {
+    title: 'Elephant',
+    artist: 'Tame Impala',
+    year: '2012',
   },
   'dont-dream-its-over': {
     title: "Don't Dream It's Over",
@@ -85,7 +85,7 @@ const PLAYLIST_GROUPS = [
     songs: ['times-they-are-a-changin', 'over-the-rainbow', 'jolene',
             'bohemian-rhapsody', 'a-day-in-the-life', 'whats-going-on'] },
   { label: 'No Chorus Needed',
-    songs: ['fast-car', 'hurt', 'alright'] },
+    songs: ['fast-car', 'hurt', 'elephant'] },
   { label: 'Case Study',
     songs: ['dont-dream-its-over'] },
 ];
@@ -189,7 +189,7 @@ const SLIDES = [
     evidence: [
       { title:'"Fast Car"',  artist:'Tracy Chapman',     note:'No chorus. Pure verse drive.',   songId: 'fast-car' },
       { title:'"Hurt"',      artist:'NIN / Johnny Cash', note:'The refrain barely counts.',     songId: 'hurt' },
-      { title:'"Alright"',   artist:'Kendrick Lamar',    note:'A chant. Not a chorus.',         songId: 'alright' },
+      { title:'"Elephant"',  artist:'Tame Impala',       note:'The riff is the hook. No chorus.', songId: 'elephant' },
     ],
     body: 'Three songs you know by heart. None of them needed one.',
   },
