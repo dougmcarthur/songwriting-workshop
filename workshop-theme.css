@@ -133,7 +133,7 @@ body,
 .evidence-grid {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 0.55em;
+  gap: 0.45em;
   margin: 0.4em auto 0;
   max-width: 760px;
 }
@@ -160,7 +160,7 @@ body,
 }
 
 .evidence-card-body {
-  padding: 0.6em 1em;
+  padding: 0.45em 1em;
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -172,13 +172,13 @@ body,
   font-weight: 700;
   font-size: 0.78em;
   line-height: 1.25;
-  margin-bottom: 0.25em;
+  margin-bottom: 0.15em;
 }
 
 .evidence-card-artist {
   font-size: 0.68em;
   opacity: 0.6;
-  margin-bottom: 0.35em;
+  margin-bottom: 0.18em;
 }
 
 .evidence-card-note {
