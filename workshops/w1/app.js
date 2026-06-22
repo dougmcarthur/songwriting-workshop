@@ -107,7 +107,6 @@ const SLIDES = [
   {
     id: 'sundogs',
     type: 'sundogs',
-    eyebrow: 'Building community',
     headline: 'Sun Dogs Music Manitoba',
     intro: 'Outside the studio, Doug runs Sun Dogs Music Manitoba — a home base for Manitoba songwriters to share work, get feedback, and grow together.',
     cards: [
@@ -124,14 +123,12 @@ const SLIDES = [
   {
     id: 'hook',
     type: 'hook',
-    eyebrow: 'Workshop 1  ·  Good Sky Studio',
     headline: 'Every song\nyou\'ve ever loved\nhas a skeleton.',
     body: 'Most people never see it.\nBy the end of this session, you will.',
   },
   {
     id: 'standard-map',
     type: 'structure',
-    eyebrow: 'The formula',
     headline: 'The Standard Map',
     blocks: [
       {l:'A', type:'verse'}, {l:'B', type:'chorus'}, {l:'A', type:'verse'},
@@ -152,7 +149,6 @@ const SLIDES = [
   {
     id: 'map-in-action',
     type: 'eras',
-    eyebrow: 'Across 70 years',
     headline: 'Same skeleton,\ndifferent skin.',
     eras: [
       { year:'1953', artist:'Hank Williams', song:"Your Cheatin' Heart",
@@ -166,7 +162,6 @@ const SLIDES = [
   {
     id: 'other-structures',
     type: 'table',
-    eyebrow: 'There are others',
     headline: 'The alternatives\nworth knowing.',
     rows: [
       { name:'AAA',             desc:'Verses only, no chorus',
@@ -189,7 +184,6 @@ const SLIDES = [
   {
     id: 'no-chorus',
     type: 'evidence',
-    eyebrow: 'The rule vs. the exception',
     headline: 'Do songs\nneed a chorus?',
     answer: 'No.',
     evidence: [
@@ -202,7 +196,6 @@ const SLIDES = [
   {
     id: 'hero-journey',
     type: 'hero',
-    eyebrow: 'The Hero\'s Journey in Song',
     headline: 'Mapping Narrative\nto Song Structure',
     rows: [
       { journey:'Ordinary World',          song:'Verse 1 — establish where we are' },
@@ -216,7 +209,6 @@ const SLIDES = [
   {
     id: 'case-study',
     type: 'casestudy',
-    eyebrow: 'Case study',
     headline: '"Don\'t Dream\nIt\'s Over"',
     subhead: 'Crowded House, 1986',
     songId: 'dont-dream-its-over',
@@ -225,7 +217,6 @@ const SLIDES = [
   {
     id: 'thesis',
     type: 'thesis',
-    eyebrow: 'The point',
     headline: 'Structure isn\'t the cage.\nIt\'s the launching pad.',
     cue: '→ Activity starts now.',
   },
@@ -233,7 +224,6 @@ const SLIDES = [
   {
     id: 'playlist',
     type: 'playlist',
-    eyebrow: 'Workshop 1 Playlist',
     headline: 'Every song\nfrom today\'s session.',
   },
 ];
@@ -351,20 +341,11 @@ const BLOCK_COLORS = { verse: '#7BA7D4', chorus: '#C8A84A', bridge: '#D47BAA', p
 
 function nl(str) { return esc(str).replace(/\n/g, '<br>'); }
 
-function eyebrowHtml(text) {
-  return text
-    ? `<p style="font-size:0.45em;text-transform:uppercase;letter-spacing:.15em;opacity:0.55;margin:0 0 0.4em">${esc(text)}</p>`
-    : '';
-}
-
 function renderSlide(slide, index) {
-  const ey = eyebrowHtml(slide.eyebrow);
-
   switch (slide.type) {
 
     case 'hook':
       return `
-        ${ey}
         <h2 class="hook-h2" style="line-height:1.1;margin-bottom:0.4em;letter-spacing:-0.03em">${nl(slide.headline)}</h2>
         <p style="font-size:0.72em;opacity:0.72;margin:0">${nl(slide.body)}</p>
       `;
@@ -380,7 +361,6 @@ function renderSlide(slide, index) {
          </span>`
       ).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:1em 0 0.75em">${blocks}</div>
         <div style="display:flex;gap:2em;flex-wrap:wrap;justify-content:center">${legend}</div>
@@ -406,7 +386,6 @@ function renderSlide(slide, index) {
         `;
       }).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div class="eras-grid" style="display:grid;grid-template-columns:repeat(3,1fr);gap:1.5em;font-size:0.8em;margin-top:0.5em">${cards}</div>
       `;
@@ -420,7 +399,6 @@ function renderSlide(slide, index) {
         return `<tr><td style="font-weight:600">${esc(r.name)}</td><td style="opacity:0.75">${esc(r.desc)}</td><td>${exampleCell}</td></tr>`;
       }).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div class="table-wrap">
           <table style="font-size:0.68em;margin-top:0.5em">
@@ -454,7 +432,6 @@ function renderSlide(slide, index) {
         `;
       }).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <p class="evidence-answer" style="font-size:2em;font-weight:700;font-family:'Poppins',sans-serif;letter-spacing:-0.03em;margin:0.1em 0 0.4em">${esc(slide.answer)}</p>
         <div class="evidence-grid">${cards}</div>
@@ -518,7 +495,6 @@ function renderSlide(slide, index) {
       }).join('');
       return `
         <div class="hero-slide">
-          ${ey}
           <h2 style="margin-bottom:0.15em;font-size:1.15em;line-height:1.15">${nl(slide.headline)}</h2>
           <div class="hero-map-wrap">
             <svg class="hero-map" viewBox="0 0 1160 520" xmlns="http://www.w3.org/2000/svg">
@@ -586,7 +562,6 @@ function renderSlide(slide, index) {
         `<p style="font-size:0.65em;line-height:1.65;margin-top:${pi === 0 ? '0.6em' : '0.5em'}">${nl(para)}</p>`
       ).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
         <div class="casestudy-body">${bodyParas}</div>
@@ -598,7 +573,6 @@ function renderSlide(slide, index) {
       const [line1, ...rest] = slide.headline.split('\n');
       const line2 = rest.join('\n');
       return `
-        ${ey}
         <h2 style="opacity:0.35">${esc(line1)}</h2>
         <h2>${esc(line2)}</h2>
         <p style="font-size:0.5em;opacity:0.55;margin-top:1em">${esc(slide.cue)}</p>
@@ -621,7 +595,6 @@ function renderSlide(slide, index) {
         `;
       }).join('');
       return `
-        ${ey}
         <div class="playlist-header">
           <h2 style="font-size:1.3em;margin:0">${nl(slide.headline)}</h2>
           <button class="playlist-create-btn" id="playlist-copy-btn">Create Playlist ↗</button>
@@ -641,7 +614,6 @@ function renderSlide(slide, index) {
     case 'title':
       return `
         <div class="title-slide">
-          <p class="title-eyebrow">Good Sky Studio &middot; Pro Artist Series &middot; Songwriting Track</p>
           <h2 class="title-headline">${nl(slide.headline)}</h2>
           <p class="title-meta">Class ${slide.classNumber} of 4 &middot; ${esc(slide.date)}</p>
         </div>
@@ -673,7 +645,6 @@ function renderSlide(slide, index) {
               <span class="instructor-initials">DM</span>
             </div>
             <div class="instructor-text">
-              <p class="instructor-eyebrow">Your instructor</p>
               <h2 class="instructor-name">Doug McArthur</h2>
               <p class="instructor-title-line">Singer-songwriter &middot; Winnipeg, MB &middot; Broken Halo &middot; Soapbox &middot; Sun Dogs Music Manitoba</p>
             </div>
@@ -700,7 +671,6 @@ function renderSlide(slide, index) {
         </div>
       `).join('');
       return `
-        ${ey}
         <h2>${esc(slide.headline)}</h2>
         <p class="sundogs-intro">${esc(slide.intro)}</p>
         <div class="sundogs-grid">${cards}</div>
@@ -721,7 +691,6 @@ function renderSlide(slide, index) {
         </li>`
       ).join('');
       return `
-        <p style="font-size:0.45em;text-transform:uppercase;letter-spacing:.15em;opacity:0.55;margin:0 0 0.3em">Before we start</p>
         <h2 class="housekeeping-headline">A few things.</h2>
         <div class="housekeeping-cols">
           <div class="housekeeping-col">

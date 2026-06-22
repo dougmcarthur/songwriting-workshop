@@ -57,14 +57,12 @@ const SLIDES = [
   {
     id: 'hook',
     type: 'hook',
-    eyebrow: 'Workshop 3  ·  Good Sky Studio',
     headline: 'Every lyric you write\nsounds like someone.\nThe question is who.',
     body: 'Today we find the line between borrowing and becoming.',
   },
   {
     id: 'about-vs-inside',
     type: 'comparison',
-    eyebrow: 'Two ways into a line',
     headline: 'Writing About vs. Writing From Inside',
     left: {
       label: 'About',
@@ -94,7 +92,6 @@ const SLIDES = [
   {
     id: 'cliche-vs-specific',
     type: 'contrast',
-    eyebrow: 'The retirement list',
     headline: 'Cliché is a shortcut.\nSpecific is the truth.',
     pairs: [
       {
@@ -114,7 +111,6 @@ const SLIDES = [
   {
     id: 'cliche-table',
     type: 'clichetable',
-    eyebrow: 'Five lines worth retiring',
     headline: 'If you\'ve heard it\na thousand times,\nso has everyone else.',
     rows: [
       {
@@ -147,7 +143,6 @@ const SLIDES = [
   {
     id: 'casestudy',
     type: 'casestudy',
-    eyebrow: 'Case study',
     headline: '"A Case of You"',
     subhead: 'Joni Mitchell, 1971',
     songId: 'a-case-of-you',
@@ -156,14 +151,12 @@ const SLIDES = [
   {
     id: 'thesis',
     type: 'thesis',
-    eyebrow: 'The point',
     headline: 'Your voice isn\'t something\nyou find. It\'s something\nyou stop hiding.',
     cue: '→ Activity starts now.',
   },
   {
     id: 'playlist',
     type: 'playlist',
-    eyebrow: 'Workshop 3 Playlist',
     headline: 'Songs studied\ntoday.',
   },
   { id: 'activity', type: 'activity' },
@@ -214,20 +207,11 @@ function buildSlides() {
 
 function nl(str) { return esc(str).replace(/\n/g, '<br>'); }
 
-function eyebrowHtml(text) {
-  return text
-    ? `<p style="font-size:0.45em;text-transform:uppercase;letter-spacing:.15em;opacity:0.55;margin:0 0 0.4em">${esc(text)}</p>`
-    : '';
-}
-
 function renderSlide(slide, index) {
-  const ey = eyebrowHtml(slide.eyebrow);
-
   switch (slide.type) {
 
     case 'hook':
       return `
-        ${ey}
         <h2 style="font-size:2.8em;line-height:1.1;margin-bottom:0.4em;letter-spacing:-0.03em">${nl(slide.headline)}</h2>
         <p style="font-size:0.72em;opacity:0.72;margin:0">${nl(slide.body)}</p>
       `;
@@ -242,7 +226,6 @@ function renderSlide(slide, index) {
         </div>
       `;
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div class="comparison-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2em;margin-top:0.5em">${col(slide.left)}${col(slide.right)}</div>
       `;
@@ -261,7 +244,6 @@ function renderSlide(slide, index) {
         </div>
       `).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div style="margin-top:0.5em">${pairs}</div>
       `;
@@ -276,7 +258,6 @@ function renderSlide(slide, index) {
         </tr>
       `).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div class="table-wrap">
           <table style="font-size:0.62em;margin-top:0.5em">
@@ -292,7 +273,6 @@ function renderSlide(slide, index) {
         ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
         <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em" class="casestudy-body">${nl(slide.body)}</p>
@@ -304,7 +284,6 @@ function renderSlide(slide, index) {
       const [line1, ...rest] = slide.headline.split('\n');
       const line2 = rest.join('\n');
       return `
-        ${ey}
         <h2 style="opacity:0.35">${esc(line1)}</h2>
         <h2>${esc(line2)}</h2>
         <p style="font-size:0.5em;opacity:0.55;margin-top:1em">${esc(slide.cue)}</p>
@@ -331,7 +310,6 @@ function renderSlide(slide, index) {
         return groupRow + songRows;
       }).join('');
       return `
-        ${ey}
         <div class="playlist-header">
           <h2 style="font-size:1.3em;margin:0">${nl(slide.headline)}</h2>
           <button class="playlist-create-btn" id="playlist-copy-btn">Create Playlist ↗</button>
@@ -351,7 +329,6 @@ function renderSlide(slide, index) {
     case 'title':
       return `
         <div class="title-slide">
-          <p class="title-eyebrow">Good Sky Studio &middot; Pro Artist Series &middot; Songwriting Track</p>
           <h2 class="title-headline">${nl(slide.headline)}</h2>
           <p class="title-meta">Class ${slide.classNumber} of 4 &middot; ${esc(slide.date)}</p>
         </div>

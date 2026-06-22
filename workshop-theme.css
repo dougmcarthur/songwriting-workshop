@@ -7,6 +7,26 @@
   --subtle:    rgba(255,255,255,0.055);
 }
 
+/* ─── Deck home link ─────────────────────────────────────────────────────────── */
+.deck-home-link {
+  position: fixed;
+  top: 18px;
+  left: 22px;
+  z-index: 200;
+  font-family: var(--font-body);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+  color: rgba(255, 255, 255, 0.55);
+  text-decoration: none;
+  transition: color 0.15s ease;
+}
+
+.deck-home-link:hover,
+.deck-home-link:focus-visible {
+  color: rgba(255, 255, 255, 0.9);
+}
+
 /* ─── Base / background ──────────────────────────────────────────────────────── */
 /* Only set background on viewport/body — NOT on .reveal itself (iOS Safari bug) */
 body,
@@ -823,14 +843,6 @@ body,
   text-align: center;
 }
 
-.title-eyebrow {
-  font-size: 0.38em;
-  text-transform: uppercase;
-  letter-spacing: 0.2em;
-  opacity: 0.4;
-  margin: 0 0 0.8em;
-}
-
 .title-headline {
   font-size: 2.6em !important;
   line-height: 1.08 !important;
@@ -896,14 +908,6 @@ body,
 }
 
 .instructor-text { flex: 1; min-width: 0; }
-
-.instructor-eyebrow {
-  font-size: 0.4em;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  opacity: 0.45;
-  margin: 0 0 0.25em;
-}
 
 .instructor-name {
   font-size: 1.6em !important;

@@ -57,14 +57,12 @@ const SLIDES = [
   {
     id: 'hook',
     type: 'hook',
-    eyebrow: 'Workshop 2  ·  Good Sky Studio',
     headline: 'Every song has a topic.\nOnly the great ones\nhave a subject.',
     body: 'Today, we learn to tell the difference.',
   },
   {
     id: 'topic-vs-subject',
     type: 'comparison',
-    eyebrow: 'Two things that look the same',
     headline: 'Topic vs. Subject',
     left: {
       label: 'Topic',
@@ -94,7 +92,6 @@ const SLIDES = [
   {
     id: 'vague-vs-specific',
     type: 'contrast',
-    eyebrow: 'The gap between good and great',
     headline: 'Vague is forgettable.\nSpecific is unforgettable.',
     pairs: [
       {
@@ -114,7 +111,6 @@ const SLIDES = [
   {
     id: 'camera',
     type: 'camera',
-    eyebrow: 'A cinematographer\'s trick',
     headline: 'Keep zooming until\nyou can film it.',
     body: 'Can you point a camera at this?\nCan you show it on a screen without explanation?\n\nIf not — zoom in.',
     cues: [
@@ -125,7 +121,6 @@ const SLIDES = [
   {
     id: 'zoom',
     type: 'zoom',
-    eyebrow: 'The technique',
     headline: 'From wide shot\nto close-up.',
     levels: [
       {
@@ -151,7 +146,6 @@ const SLIDES = [
   {
     id: 'casestudy',
     type: 'casestudy',
-    eyebrow: 'Case study',
     headline: '"The River"',
     subhead: 'Bruce Springsteen, 1980',
     songId: 'the-river',
@@ -160,14 +154,12 @@ const SLIDES = [
   {
     id: 'thesis',
     type: 'thesis',
-    eyebrow: 'The point',
     headline: 'The more specific you are,\nthe more universal it becomes.',
     cue: '→ Activity starts now.',
   },
   {
     id: 'playlist',
     type: 'playlist',
-    eyebrow: 'Workshop 2 Playlist',
     headline: 'Songs studied\ntoday.',
   },
   { id: 'activity', type: 'activity' },
@@ -247,20 +239,11 @@ function setupActivity() {
 
 function nl(str) { return esc(str).replace(/\n/g, '<br>'); }
 
-function eyebrowHtml(text) {
-  return text
-    ? `<p style="font-size:0.45em;text-transform:uppercase;letter-spacing:.15em;opacity:0.55;margin:0 0 0.4em">${esc(text)}</p>`
-    : '';
-}
-
 function renderSlide(slide, index) {
-  const ey = eyebrowHtml(slide.eyebrow);
-
   switch (slide.type) {
 
     case 'hook':
       return `
-        ${ey}
         <h2 style="font-size:2.8em;line-height:1.1;margin-bottom:0.4em;letter-spacing:-0.03em">${nl(slide.headline)}</h2>
         <p style="font-size:0.72em;opacity:0.72;margin:0">${nl(slide.body)}</p>
       `;
@@ -275,7 +258,6 @@ function renderSlide(slide, index) {
         </div>
       `;
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div class="comparison-grid" style="display:grid;grid-template-columns:1fr 1fr;gap:2em;margin-top:0.5em">${col(slide.left)}${col(slide.right)}</div>
       `;
@@ -294,7 +276,6 @@ function renderSlide(slide, index) {
         </div>
       `).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div style="margin-top:0.5em">${pairs}</div>
       `;
@@ -302,7 +283,6 @@ function renderSlide(slide, index) {
 
     case 'camera':
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <p>${esc(slide.body)}</p>
         <ul style="font-size:0.75em">${slide.cues.map(c => `<li>${esc(c)}</li>`).join('')}</ul>
@@ -321,7 +301,6 @@ function renderSlide(slide, index) {
         ${i < slide.levels.length - 1 ? '<p style="font-size:0.7em;opacity:0.35;margin:0.2em 0 0.2em 0.5em">↓ zoom in</p>' : ''}
       `).join('');
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <div style="display:flex;flex-direction:column;gap:0.25em;margin-top:0.5em;font-size:0.75em">${levels}</div>
       `;
@@ -332,7 +311,6 @@ function renderSlide(slide, index) {
         ? `<p style="margin-top:0.8em"><button class="song-link" data-song="${slide.songId}" style="border:1px solid rgba(255,255,255,0.35);padding:0.35em 1em;border-radius:4px;font-size:0.6em">Listen to this song ↗</button></p>`
         : '';
       return `
-        ${ey}
         <h2>${nl(slide.headline)}</h2>
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
         <p style="font-size:0.65em;line-height:1.65;margin-top:0.6em">${nl(slide.body)}</p>
@@ -344,7 +322,6 @@ function renderSlide(slide, index) {
       const [line1, ...rest] = slide.headline.split('\n');
       const line2 = rest.join('\n');
       return `
-        ${ey}
         <h2 style="opacity:0.35">${esc(line1)}</h2>
         <h2>${esc(line2)}</h2>
         <p style="font-size:0.5em;opacity:0.55;margin-top:1em">${esc(slide.cue)}</p>
@@ -371,7 +348,6 @@ function renderSlide(slide, index) {
         return groupRow + songRows;
       }).join('');
       return `
-        ${ey}
         <div class="playlist-header">
           <h2 style="font-size:1.3em;margin:0">${nl(slide.headline)}</h2>
           <button class="playlist-create-btn" id="playlist-copy-btn">Create Playlist ↗</button>
@@ -391,7 +367,6 @@ function renderSlide(slide, index) {
     case 'title':
       return `
         <div class="title-slide">
-          <p class="title-eyebrow">Good Sky Studio &middot; Pro Artist Series &middot; Songwriting Track</p>
           <h2 class="title-headline">${nl(slide.headline)}</h2>
           <p class="title-meta">Class ${slide.classNumber} of 4 &middot; ${esc(slide.date)}</p>
         </div>
