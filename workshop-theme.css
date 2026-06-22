@@ -1512,6 +1512,15 @@ body,
 /* Note: media queries fire on actual viewport px, not the Reveal-scaled canvas.  */
 /* Slide canvas = 90% of viewport, so breakpoints intentionally exceed canvas px. */
 
+/* ── Narrow desktop / iPad (≤ 1366px) ────────────────────────────────────────── */
+/* The 15% evidence-grid inset is tuned for wide screens; on smaller canvases it
+   squeezes the 3 cards until titles clip. Ease it off so they keep their room. */
+@media (max-width: 1366px) {
+  .evidence-grid {
+    padding: 0 7%;
+  }
+}
+
 /* ── Tablet portrait (≤ 900px viewport → ≤ 810px canvas) ─────────────────────── */
 @media (max-width: 900px) {
   /* 3-col evidence grid → 2 columns */
