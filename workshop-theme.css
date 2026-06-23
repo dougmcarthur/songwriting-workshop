@@ -340,6 +340,31 @@ body,
 .playlist-create-btn:hover { opacity: 0.88; transform: scale(1.03); }
 .playlist-create-btn.copied { background: #19a349; }
 
+/* Playlist CTAs: primary "Open in Spotify" link + secondary "Build your own". */
+.playlist-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+/* The Spotify link is an <a>; scope its colour so it beats Reveal's `.reveal a`
+   link colour (0,1,1) — otherwise the label renders as a link, not black. */
+.reveal a.playlist-create-btn {
+  color: #000;
+  text-decoration: none;
+}
+/* Secondary action — ghost outline so the real playlist reads as primary. */
+.playlist-btn-ghost {
+  background: transparent;
+  color: #1DB954;
+  border: 1px solid rgba(29,185,84,0.5);
+}
+.playlist-btn-ghost:hover { background: rgba(29,185,84,0.12); }
+/* `.copied` fills the button solid green — switch text to black for contrast. */
+.playlist-btn-ghost.copied { color: #000; }
+
 .playlist-table {
   width: 100%;
   border-collapse: collapse;

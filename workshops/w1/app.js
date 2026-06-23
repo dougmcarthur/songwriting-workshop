@@ -643,7 +643,10 @@ function renderSlide(slide, index) {
       return `
         <div class="playlist-header">
           <h2 style="font-size:1.3em;margin:0">${nl(slide.headline)}</h2>
-          <button class="playlist-create-btn" id="playlist-copy-btn">Create Playlist ↗</button>
+          <div class="playlist-actions">
+            <a class="playlist-create-btn" href="https://open.spotify.com/playlist/3jVCEIiCpnKMSCB1HTe7X8" target="_blank" rel="noopener noreferrer">Open in Spotify ↗</a>
+            <button class="playlist-create-btn playlist-btn-ghost" id="playlist-copy-btn">Build your own ↗</button>
+          </div>
         </div>
         <table class="playlist-table">
           <thead><tr>
