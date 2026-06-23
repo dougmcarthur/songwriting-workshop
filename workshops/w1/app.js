@@ -208,12 +208,13 @@ const SLIDES = [
   },
   {
     id: 'case-study',
-    type: 'casestudy',
+    type: 'finale',
     headline: '"Don\'t Dream\nIt\'s Over"',
     subhead: 'Crowded House, 1986',
     songId: 'dont-dream-its-over',
-    body: 'A Hero\'s Journey that refuses to complete.\n\nThe final chorus doesn\'t bring the hero home — it insists, almost desperately, that something good is still possible.\n\nThe resolution never arrives.\n\nUnresolved for 40 years. Nobody\'s tired of it.',
+    lead: 'A Hero\'s Journey that refuses to complete. The final chorus never brings the hero home — it just insists something good is still possible.',
     quote: 'The resolution never arrives.',
+    foot: 'Unresolved for 40 years — and nobody\'s tired of it.',
   },
   {
     id: 'thesis',
@@ -570,6 +571,47 @@ function renderSlide(slide, index) {
         <h3 style="opacity:0.7;font-size:0.9em;margin-top:0.1em">${esc(slide.subhead)}</h3>
         <div class="casestudy-body">${bodyParas}</div>
         ${listenBtn}
+      `;
+    }
+
+    case 'finale': {
+      // The Hero's Journey circle that never closes: a near-full loop whose
+      // final "return" arc is missing — the resolution that never arrives.
+      const listenBtn = slide.songId
+        ? `<p style="margin-top:0.7em"><button class="song-link song-listen-btn" data-song="${slide.songId}">Listen to this song ↗</button></p>`
+        : '';
+      return `
+        <div class="finale-slide">
+          <div class="finale-art">
+            <svg viewBox="0 0 360 360" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <defs>
+                <marker id="finale-arrow" viewBox="0 0 10 10" refX="6" refY="5"
+                        markerUnits="userSpaceOnUse" markerWidth="20" markerHeight="20"
+                        orient="auto">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#C8A84A"/>
+                </marker>
+              </defs>
+              <!-- the missing resolution: faint dashed closure across the gap -->
+              <path d="M108.5 65.5 A135 135 0 0 1 251.5 65.5" fill="none"
+                    stroke="rgba(255,255,255,0.16)" stroke-width="2"
+                    stroke-dasharray="2 7" stroke-linecap="round"/>
+              <!-- the journey taken: almost a full loop, but it never closes -->
+              <path d="M251.5 65.5 A135 135 0 1 1 108.5 65.5" fill="none"
+                    stroke="#7BA7D4" stroke-width="7" stroke-linecap="round"
+                    marker-end="url(#finale-arrow)"/>
+              <!-- ordinary world / where it began -->
+              <circle cx="251.5" cy="65.5" r="7" fill="#7BA7D4"/>
+            </svg>
+          </div>
+          <div class="finale-text">
+            <h2 class="finale-headline">${nl(slide.headline)}</h2>
+            <h3 class="finale-sub">${esc(slide.subhead)}</h3>
+            <p class="finale-lead">${esc(slide.lead)}</p>
+            <p class="finale-quote">${esc(slide.quote)}</p>
+            <p class="finale-foot">${esc(slide.foot)}</p>
+            ${listenBtn}
+          </div>
+        </div>
       `;
     }
 

@@ -1519,9 +1519,67 @@ body,
   opacity: 1;
 }
 
+/* ─── Finale slide ("Don't Dream It's Over") ─────────────────────────────────── */
+/* Two columns: broken Hero's-Journey circle on the left, condensed text right.
+   `.reveal` prefixes give specificity to beat Reveal's `.reveal p`/`h3` rules. */
+.reveal .finale-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2.6em;
+  height: 100%;
+}
+.reveal .finale-art {
+  flex-shrink: 0;
+  width: 300px;
+}
+.reveal .finale-art svg { width: 100%; height: auto; display: block; }
+.reveal .finale-text {
+  text-align: left;
+  max-width: 12.5em;
+}
+.reveal h2.finale-headline {
+  font-size: 1.5em;
+  line-height: 1.08;
+  margin: 0;
+}
+.reveal h3.finale-sub {
+  opacity: 0.6;
+  font-size: 0.7em;
+  font-weight: 500;
+  margin: 0.3em 0 0.95em;
+}
+.reveal .finale-lead {
+  font-size: 0.6em;
+  opacity: 0.85;
+  line-height: 1.5;
+  margin: 0 0 0.7em;
+}
+.reveal .finale-quote {
+  font-family: var(--font-head);
+  font-weight: 700;
+  font-size: 0.82em;
+  line-height: 1.3;
+  border-left: 3px solid #7BA7D4;
+  padding-left: 0.6em;
+  margin: 0 0 0.7em;
+}
+.reveal .finale-foot {
+  font-size: 0.55em;
+  opacity: 0.5;
+  line-height: 1.5;
+  margin: 0;
+}
+
 /* ─── Responsive ─────────────────────────────────────────────────────────────── */
 /* Note: media queries fire on actual viewport px, not the Reveal-scaled canvas.  */
 /* Slide canvas = 90% of viewport, so breakpoints intentionally exceed canvas px. */
+
+/* ── iPad / narrow desktop (≤ 1100px): shrink finale illustration ────────────── */
+@media (max-width: 1100px) {
+  .reveal .finale-art { width: 230px; }
+  .reveal .finale-slide { gap: 1.8em; }
+}
 
 /* ── Tablet portrait (≤ 900px viewport → ≤ 810px canvas) ─────────────────────── */
 @media (max-width: 900px) {
@@ -1669,6 +1727,15 @@ body,
   .evidence-card-artist {
     margin-bottom: 0.15em;
   }
+
+  /* ── Finale slide: stack illustration above text, center it ── */
+  .reveal .finale-slide {
+    flex-direction: column;
+    gap: 1em;
+  }
+  .reveal .finale-art { width: 150px; }
+  .reveal .finale-text { text-align: center; max-width: 100%; }
+  .reveal .finale-quote { border-left: none; padding-left: 0; }
 
   /* ── Slide 7 (case study): tighten paragraph spacing ── */
   .casestudy-body p {
