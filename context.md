@@ -249,7 +249,7 @@ On Spotlistr the user pastes the clipboard content to generate a Spotify / Apple
 
 ## Workshop 1: Know the Rules So You Can Break Them
 
-**Songs:** Your Cheatin' Heart (Hank Williams, 1953), Hey Jude (The Beatles, 1968), Last Night (Morgan Wallen, 2023), The Times They Are A-Changin' (Bob Dylan, 1964), Over the Rainbow (Judy Garland, 1939), Jolene (Dolly Parton, 1973), Bohemian Rhapsody (Queen, 1975), A Day in the Life (The Beatles, 1967), What's Going On (Marvin Gaye, 1971), Fast Car (Tracy Chapman, 1988), Hurt (Johnny Cash, 2002), Elephant (Tame Impala, 2012), Don't Dream It's Over (Crowded House, 1986)
+**Songs:** Your Cheatin' Heart (Hank Williams, 1953), Hey Jude (The Beatles, 1968), Call Me Maybe (Carly Rae Jepsen, 2012), The Times They Are A-Changin' (Bob Dylan, 1964), Over the Rainbow (Judy Garland, 1939), Jolene (Dolly Parton, 1973), Bohemian Rhapsody (Queen, 1975), A Day in the Life (The Beatles, 1967), What's Going On (Marvin Gaye, 1971), Fast Car (Tracy Chapman, 1988), Hurt (Johnny Cash, 2002), Elephant (Tame Impala, 2012), Don't Dream It's Over (Crowded House, 1986)
 
 **Activity — Build Your Skeleton:**
 - 7 drop zones: V1, Pre-Ch, Ch1, V2, Ch2, Bridge, Outro

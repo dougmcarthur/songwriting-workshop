@@ -13,10 +13,10 @@ const SONGS = {
     artist: 'The Beatles',
     year: '1968',
   },
-  'last-night': {
-    title: 'Last Night',
-    artist: 'Morgan Wallen',
-    year: '2023',
+  'call-me-maybe': {
+    title: 'Call Me Maybe',
+    artist: 'Carly Rae Jepsen',
+    year: '2012',
   },
   'times-they-are-a-changin': {
     title: "The Times They Are A-Changin'",
@@ -80,7 +80,7 @@ const PLATFORMS = [
 
 const PLAYLIST_GROUPS = [
   { label: 'The Map in Action',
-    songs: ['your-cheatin-heart', 'hey-jude', 'last-night'] },
+    songs: ['your-cheatin-heart', 'hey-jude', 'call-me-maybe'] },
   { label: 'Alternative Structures',
     songs: ['times-they-are-a-changin', 'over-the-rainbow', 'jolene',
             'bohemian-rhapsody', 'a-day-in-the-life', 'whats-going-on'] },
@@ -155,8 +155,8 @@ const SLIDES = [
         songId: 'your-cheatin-heart', blocks: ['v','c','v','c','b','c','c'] },
       { year:'1968', artist:'The Beatles', song:'Hey Jude',
         songId: 'hey-jude', blocks: ['v','c','v','c','b','c','c'] },
-      { year:'2023', artist:'Morgan Wallen', song:'Last Night',
-        songId: 'last-night', blocks: ['v','c','v','c','b','c','c'] },
+      { year:'2012', artist:'Carly Rae Jepsen', song:'Call Me Maybe',
+        songId: 'call-me-maybe', blocks: ['v','c','v','c','b','c','c'] },
     ],
   },
   {
