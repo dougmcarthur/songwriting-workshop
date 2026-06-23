@@ -61,9 +61,20 @@ body,
   font-size: var(--r-heading2-size, 1.6em);
 }
 
-/* Hook headline — large display size, moved from inline style so mobile can override */
-.hook-h2 {
+/* Hook headline — large display size. Tag-qualified (.reveal h2.hook-h2 → 0,2,1)
+   so it beats the global `.reveal h2` size pin; a bare `.hook-h2` (0,1,0) loses
+   to it and silently renders at the default 1.6em. */
+.reveal h2.hook-h2 {
   font-size: 2.8em;
+}
+
+/* Strip Reveal black-theme's framed-photo treatment (.reveal section img adds a
+   white 4px border, drop shadow, and grey background) — it clashes with the
+   dark rounded-card look used for the instructor photo and album art. */
+.reveal section img {
+  border: 0;
+  box-shadow: none;
+  background: none;
 }
 
 /* Table wrapper — allows horizontal scroll on narrow viewports */
@@ -864,7 +875,8 @@ body,
   margin: 0 0 0.6em !important;
 }
 
-.title-meta {
+/* `.reveal` prefix so margin beats Reveal's `.reveal p { margin: ~20px 0 }`. */
+.reveal .title-meta {
   font-size: 0.48em;
   opacity: 0.45;
   margin: 0;
@@ -929,7 +941,7 @@ body,
   margin: 0 0 0.15em !important;
 }
 
-.instructor-title-line {
+.reveal .instructor-title-line {
   font-size: 0.58em;
   opacity: 0.5;
   margin: 0 0 0.8em;
@@ -1103,7 +1115,7 @@ body,
   flex-shrink: 0;
 }
 
-.hk-body {
+.reveal .hk-body {
   font-size: 0.58em;
   line-height: 1.65;
   opacity: 0.8;
@@ -1499,7 +1511,11 @@ body,
   line-height: 1.4 !important;
   border-left: 3px solid #7BA7D4;
   padding-left: 0.6em;
-  margin: 0.6em 0 !important;
+  /* Left-align the text and center the block so the accent bar hugs the quote
+     rather than detaching from centered text. */
+  text-align: left;
+  max-width: 22em;
+  margin: 0.6em auto !important;
 }
 
 /* Listen button — shares the case-study accent (#7BA7D4); pill keeps it
