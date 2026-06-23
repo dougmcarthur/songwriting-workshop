@@ -88,6 +88,33 @@ body, .reveal-viewport { background: var(--bg) !important; }
 /* .reveal — NO background rule here */
 ```
 
+### Reveal selector-specificity gotcha (read before adding/overriding styles)
+
+The decks link Reveal's `black.css`, whose base rules target **elements scoped under
+`.reveal`** — e.g. `.reveal h2`, `.reveal h3`, `.reveal p`, `.reveal ul`,
+`.reveal section img`. These all have specificity **(0,1,1)**. A bare utility class
+like `.hook-h2` or `.sundogs-intro` is only **(0,1,0)**, so it **silently loses** —
+the override appears in the stylesheet but never takes effect, and there's no error.
+
+**Rule: any class that overrides a property Reveal already sets on that element must
+out-specify (0,1,1).** Use one of:
+- Tag-qualify: `.reveal h2.hook-h2 { … }` → (0,2,1) ✅
+- Scope under `.reveal`: `.reveal .hk-care { … }`, `.reveal .title-meta { … }` → (0,2,0) ✅
+- `!important` (matches existing convention for `.title-headline`, `.casestudy-quote`,
+  `.sundogs-intro`, etc.) ✅
+- Inline `style="…"` also wins (this is why W2–W4 hook headlines worked while W1's
+  class-based one didn't — moving inline → class regressed it).
+
+Reveal properties that have bitten this deck (all needed scoping/`!important`):
+| Reveal rule | Symptom when a bare class tries to override |
+|-------------|---------------------------------------------|
+| `.reveal h2/h3 { font-size }` | headline renders at default size (hook, evidence, finale) |
+| `.reveal p { margin: ~20px 0 }` | wrong/extra vertical spacing; `max-width` boxes pin left (no `margin: auto`) |
+| `.reveal ul { list-style: disc }` | stray disc bullet appears next to custom `→` markers |
+| `.reveal section img { border: 4px #fff; box-shadow; background }` | unwanted white photo frame on images |
+
+A global `.reveal section img` reset is now in place; don't re-introduce framed images.
+
 ### Fonts
 
 - **Poppins 600/700** — all headings (`h1`, `h2`, `h3`, `h4`)
