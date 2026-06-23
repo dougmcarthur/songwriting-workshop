@@ -1110,7 +1110,10 @@ body,
   margin: 0 0 0.5em;
 }
 
-.hk-care {
+/* `.reveal` prefix needed so list-style: none beats Reveal core's
+   `.reveal ul { list-style-type: disc }` — otherwise the disc bullet renders
+   alongside the custom → arrow below. */
+.reveal .hk-care {
   list-style: none;
   padding: 0;
   margin: 0;
